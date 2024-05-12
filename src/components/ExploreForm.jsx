@@ -63,6 +63,7 @@ function ExploreForm() {
       <div className="flex flex-col justify-start items-start w-full max-w-[1024px] gap-5 lg:flex-row ">
         <div className="flex h-[65px] w-full lg:max-w-[170px] lg:h-[65px] lg:flex-row items-center flex-col  shadowCard relative rounded-lg justify-center">
           <select
+            className="bg-white"
             name="Flight Type"
             id="type"
             value={flightType}
@@ -73,13 +74,13 @@ function ExploreForm() {
           </select>
         </div>
         <div className="flex h-[65px] w-full lg:max-w-[170px] lg:h-[65px] lg:flex-row items-center flex-col  shadowCard relative rounded-lg justify-center">
-          <select name="Flight Class" id="class">
+          <select className="bg-white" name="Flight Class" id="class">
             <option value="Economic">Economic</option>
             <option value="First Class">First Class</option>
           </select>
         </div>
         <div className="flex h-[65px] w-full lg:max-w-[170px] lg:h-[65px] lg:flex-row items-center flex-col  shadowCard relative rounded-lg justify-center">
-          <select name="Passenger Type" id="pType">
+          <select className="bg-white" name="Passenger Type" id="pType">
             <option value="Adult">Adult</option>
             <option value="Minor">Minor</option>
           </select>

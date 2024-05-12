@@ -8,7 +8,6 @@ import "./App.css";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { ToastContainer } from "react-toastify";
-import Sign from "./pages/Sign";
 
 function Logout() {
   localStorage.clear();
@@ -28,18 +27,16 @@ function App() {
             <Route path="/explore" element={<FlightExplore />} />
           <Route path="/" element={<Home />} />
           <Route path="/logout" element={<Logout />} />
-          <Route
-            path="/protected"
+          {/* <Route
             element={
-              <ProtectedRoute>
+              <ProtectedRoute> */}
                 <Route path="/confirm" element={<Confirm />} />
                 <Route path="/passenger-info" element={<PassengerInfo />} />
                 <Route path="/payment" element={<Payment />} />
-              </ProtectedRoute>
+              {/* </ProtectedRoute>
             }
-          />
-          <Route path="/sign" element={<Sign />} />
-          {/* <Route path="*" element={<NotFound />} /> */}
+          /> */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
         <ToastContainer

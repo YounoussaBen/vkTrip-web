@@ -8,7 +8,7 @@ import japan from './JapanAirlines.png'
 import Korean from './KoreanAir.png'
 import quantas from './QantasAirlines.png'
 import united from './UnitedAirlines.png'
-import tripma from './tripma.png'
+import logo from './logo.png'
 
 export {
     china,
@@ -21,5 +21,5 @@ export {
     Korean,
     quantas,
     united,
-    tripma
+    logo
 }
