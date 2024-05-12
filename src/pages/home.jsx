@@ -1,6 +1,6 @@
-import Hero from "../components/hero";
+import { Hero } from "../components";
 
-function Home() {
+const Home = () => {
   return (
     <div className="mt-[70px]">
      <Hero/>

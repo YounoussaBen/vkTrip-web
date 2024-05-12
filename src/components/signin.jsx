@@ -27,7 +27,7 @@ const LoginForm = ({ email, setEmail, password, setPassword }) => (
   </form>
 );
 
-const Signin = ({ signin, setSignin }) => {
+const Signin = ({ signin, setSignin, openAnotherModal, onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [signup, setSignup] = useState(false);
@@ -65,7 +65,7 @@ const Signin = ({ signin, setSignin }) => {
           </h1>
           <MdOutlineClose
             className="text-[#6E7491] cursor-pointer"
-            onClick={() => setSignin(!signin)}
+            onClick={() => onClose()}
           />
         </div>
         <p className=" text-sm sm:text-[18px] leading-4 sm:leading-6 text-[#7C8DB0] mt-2">
@@ -73,7 +73,7 @@ const Signin = ({ signin, setSignin }) => {
         </p>
       </header>
       <LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} />
-      <div className="w-full flex items-center justify-center">
+      <div className="flex items-center justify-center w-full">
         <button
           className="w-full bg-[#605DEC] text-[#FAFAFA] rounded py-3 outline-none border-none"
           onClick={handleSubmit}
@@ -81,7 +81,7 @@ const Signin = ({ signin, setSignin }) => {
           Sign In
         </button>
       </div>
-      <div className="flex justify-center items-center"> 
+      <div className="flex items-center justify-center"> 
       {loading && <LoadingIndicator />}
       </div>
       <div className="flex justify-center mt-2">
@@ -90,8 +90,9 @@ const Signin = ({ signin, setSignin }) => {
           <span
             className="text-[#605DEC] cursor-pointer"
             onClick={() => {
-                setSignin(false);
-                setSignup(true);
+              openAnotherModal()
+                // setSignin(false);
+                // setSignup(true);
                 }
             }
             >
@@ -99,8 +100,8 @@ const Signin = ({ signin, setSignin }) => {
           </span>
         </p>
       </div>
-      {signup && <Signup signup={signup} setSignup={setSignup}/>}
-      <div className="w-full flex items-center justify-center">
+      {/* {signup && <Signup signup={signup} setSignup={setSignup}/>} */}
+      <div className="flex items-center justify-center w-full">
         <button
           className="w-full flex gap-2 items-center justify-center border-[1px] border-[#605DEC] rounded p-3"
           onClick={handleGoogleLogin}

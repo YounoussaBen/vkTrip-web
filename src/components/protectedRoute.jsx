@@ -3,9 +3,13 @@ import { jwtDecode } from "jwt-decode";
 import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
+import React from 'react';
+import { useContext } from 'react';
 
+export const AuthContext = React.createContext();
 
 function ProtectedRoute({ children }) {
+    const Authorized = useContext(AuthContext);
     const [isAuthorized, setIsAuthorized] = useState(null);
 
     useEffect(() => {
@@ -44,7 +48,7 @@ function ProtectedRoute({ children }) {
         return <div>Loading...</div>;
     }
 
-    return isAuthorized ? children : <Navigate to="/" />;
+    return isAuthorized ? children : <Navigate to="/sign" />;
 }
 
 export default ProtectedRoute;
