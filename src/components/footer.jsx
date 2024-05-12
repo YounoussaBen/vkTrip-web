@@ -4,7 +4,7 @@ import googlePlay from '../assets/icons/googlePlay.png';
 
 const Footer = () => {
   return (
-    <div className="mt-96 lg:mt-28 flex flex-col gap-5 px-8">
+    <div className="lg:mt-28 flex flex-col gap-5 px-8">
       <div className="flex justify-between items-start flex-col md:flex-row gap-7">
         <div className="flex justify-start items-start">
           <h1 className="text-[#605DEC] font-bold text-2xl">vkTrip</h1>

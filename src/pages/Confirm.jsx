@@ -3,14 +3,13 @@ import { MdOutlineClose } from "react-icons/md";
 import { FlightCard } from "../container";
 import { hawaiian } from "../assets/logo";
 import { creditCard } from "../assets/icons";
-import { map1 } from "../assets/images";
 
 const Confirm = () => {
     const[close, setClose] = useState(true)
 
   return (
     <>
-    <div className="flex flex-col items-start justify-between w-full h-full gap-10 px-8 mt-20 lg:flex-row ">
+    <div className="mb-28 flex flex-col items-start justify-between w-full h-full gap-10 px-8 mt-20 lg:flex-row ">
        <div className="w-full lg:w-[756px] flex flex-col items-start gap-16">
           { close && (
             <div className="w-full lg:w-[704px] h-[64px] border-2 border-[#007B65] bg-[#EAFFFB] rounded  p-2 hidden md:flex items-center justify-center  ">
@@ -64,36 +63,6 @@ const Confirm = () => {
              </div>
           </div>
 
-          <div className="flex flex-col items-start justify-start w-full h-full gap-4">
-          <h1 className="text-[#6E7491] text-xl sm:text-2xl font-bold">Share your travel itinerary</h1>
-          <p className="text-[#7C8DB0] text-base sm:text-lg font-normal">You can email your itinerary to anyone by entering their email address here.</p>
-          <form className="flex flex-col items-start justify-start w-full h-full gap-5 mt-5">
-              <input
-                type="text"
-                placeholder="Email address "
-                className="w-full sm:w-[400px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
-              />
-              <input
-                type="text"
-                placeholder="Email address "
-                className="w-full sm:w-[400px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
-              />
-              <input
-                type="text"
-                placeholder="Email address "
-                className="w-full sm:w-[400px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
-              />
-              </form>
-              <div className="flex items-center justify-center mt-2">
-              <button className="bg-[#605DEC] text-[#FAFAFA] text-base px-2 py-3 rounded hover:bg-white border-[1px] border-[#605DEC] hover:text-[#605DEC] transition-all duration-200">Email itinerary</button>
-              </div>
-          </div>
-          <div className="flex flex-col items-start justify-start w-full h-full gap-4">
-          <h1 className="text-[#6E7491] text-xl sm:text-2xl font-bold">Flight Route</h1>
-          <div className="w-full h-full md:w-[750px] md:h-[400px]">
-             <img src={map1} alt=""  className="object-contain w-full h-full" />
-          </div>
-          </div>
        </div>
 
        <div className="w-full sm:w-[400px] h-full flex flex-col items-start gap-28">
@@ -130,13 +99,6 @@ const Confirm = () => {
                 <p>$768</p>
              </div>
              <hr className="w-full "/>
-          </div>
-          </div>
-
-          <div className="flex flex-col items-start justify-start w-full h-full gap-5">
-          <h1 className="text-[#6E7491] text-xl sm:text-2xl font-bold">Payment method</h1>
-          <div className="w-[300px] h-[188px]">
-          <img src={creditCard} alt="" className="object-contain w-full h-full"/>
           </div>
           </div>
        </div>

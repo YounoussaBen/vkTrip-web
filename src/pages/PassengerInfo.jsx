@@ -114,7 +114,7 @@ const passengerData = {
 
   return (
     <>
-      <div className="flex flex-col items-start justify-between w-full h-full gap-10 px-8 mt-20 lg:flex-row">
+      <div className="mb-28 flex flex-col items-start justify-between w-full h-full gap-10 px-8 mt-20 lg:flex-row">
         <div className="w-full lg:w-[682px] flex flex-col items-start gap-10">
           <div className="flex flex-col items-start w-full gap-2">
             <h1 className="titleh1">

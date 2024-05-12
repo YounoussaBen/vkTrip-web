@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 const FlightExplore = ({}) => {
   return (
-      <div className="flex flex-col w-full px-8">
+      <div className="mb-28 flex flex-col w-full px-8">
           <SelectDetails />
           <FlightChoose />
       </div>

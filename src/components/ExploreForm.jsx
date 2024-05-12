@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { suggestions } from "../constants";
 import departure from "../assets/icons/departure.png";
 import arrival from "../assets/icons/arrival.png";
-// import calendar from "../assets/icons/calendar.png";
+import calendar from "../assets/icons/calendar.png";
 import person from "../assets/icons/person.png";
 import { format } from "date-fns";
 import { Calendar, DateRange } from "react-date-range";
@@ -144,9 +144,8 @@ function ExploreForm() {
 
         <div className="flex w-full h-full justify-start items-center border-[1px] border-[#CBD4E6] p-2">
           <div className="flex" onClick={() => setOpenDate(!openDate)}>
-            {/* <img src={calendar} alt="calendar" width={20} height={20}/> */}
+            <img src={calendar} alt="calendar" width={20} height={20}/>
             <div>
-              <p className="text-xs">Date</p>
               <span className="text-[#7C8DB0] text-base leading-6 ml-2 cursor-pointer">
                 {flightType === "One Way"
                   ? `${format(date[0].startDate, "dd/MM/yyyy")}`

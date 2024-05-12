@@ -1,8 +1,3 @@
-import { departure, arrival, calendar, person } from "../assets/icons";
-import { format } from "date-fns";
-// import "react-date-range/dist/styles.css";
-// import "react-date-range/dist/theme/default.css";
-import { useState } from "react";
 import ExploreForm from "./ExploreForm";
 
 const SelectDetails = () => {

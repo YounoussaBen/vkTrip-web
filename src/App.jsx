@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Home, Confirm, FlightExplore, PassengerInfo, Payment } from "./pages";
+import { Home, Confirm, FlightExplore, PassengerInfo, Payment, Flights } from "./pages";
 import NotFound from "./pages/notFound";
 import ProtectedRoute from "./components/protectedRoute";
 import { Navigate } from "react-router-dom";
@@ -33,6 +33,7 @@ function App() {
                 <Route path="/confirm" element={<Confirm />} />
                 <Route path="/passenger-info" element={<PassengerInfo />} />
                 <Route path="/payment" element={<Payment />} />
+                <Route path="my-flights" element={<Flights />} />
               {/* </ProtectedRoute>
             }
           /> */}
