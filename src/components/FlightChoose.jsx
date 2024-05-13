@@ -62,6 +62,27 @@ const FlightChoose = () => {
             </h1>
           </div>
           <div className="w-full flex flex-col items-start justify-start  border-[1px] border-[#E9E8FC] rounded-xl">
+            <div
+              onClick={() => {
+                handleOpenLoginOrPage();
+                // handleOpenLoginOrPage()
+              }}
+            >
+              <FlightCard
+                img="{item.airline.logo}"
+                arrival_location="{item.arrival_location}"
+                departure_location="{item.departure_location}"
+                flight_class="{item.flight_class}"
+                passenger_type="{item.passenger_type}"
+                duration="1h"
+                name="{item.airline.name}"
+                date=""
+                stop="{item.stopover}"
+                hnl="no stopover"
+                price="{item.base_price}"
+                trip="{cflights?.flight_type}"
+              />
+            </div>
             <div className="w-full cursor-pointer border-b-[1px] border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE]">
               {flights?.length === 0 ? (
                 <div className="p-6 ">No match your search</div>
