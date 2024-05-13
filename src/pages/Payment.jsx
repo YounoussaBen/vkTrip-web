@@ -41,11 +41,11 @@ import {
     const bookData = JSON.parse(localStorage.getItem("booking_data"))
     console.log('The payment data in storage',bookData)
   
-    // const paymentData = {
-    //   'booking_id':bookData.id,
-    //   'total_price':bookData.total_price,
-    //   'card_token':'tok_visa_cartesBancaires'
-    // }
+// const paymentData = {
+//   'booking_id':bookData.id,
+//   'total_price':bookData.total_price,
+//   'card_token':'tok_visa_cartesBancaires'
+// }
   
 //     const payMyFlight = async (e) => {
 //       // e.preventDefault();
@@ -77,38 +77,38 @@ import {
             </div>
             <div className="flex flex-col items-start justify-start w-full gap-5">
               <h2 className="text-[#6E7491] text-xl">Credit card details</h2>
-              <form className="flex flex-col items-start justify-start w-full h-full gap-5">
+              <form className="w-full h-full flex flex-col items-start justify-start gap-5">
+              <input
+                type="text"
+                placeholder="Name on card"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full sm:w-[480px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
+              />
+              <input
+                type="text"
+                placeholder="Card Number"
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+                className="w-full sm:w-[480px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
+              />
+              <div className="flex items-center justify-center gap-5">
                 <input
                   type="text"
-                  placeholder="Name on card"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full sm:w-[480px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
+                  placeholder="Expiration date [MM/YY]"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full sm:w-[240px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
                 />
                 <input
                   type="text"
-                  placeholder="Card Number"
-                  value={number}
-                  onChange={(e) => setNumber(e.target.value)}
-                  className="w-full sm:w-[480px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
+                  placeholder="CCV"
+                  value={ccv}
+                  onChange={(e) => setCcv(e.target.value)}
+                  className="w-full sm:w-[216px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
                 />
-                <div className="flex items-center justify-center gap-5">
-                  <input
-                    type="text"
-                    placeholder="Expiration date [MM/YY]"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full sm:w-[240px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
-                  />
-                  <input
-                    type="text"
-                    placeholder="CCV"
-                    value={ccv}
-                    onChange={(e) => setCcv(e.target.value)}
-                    className="w-full sm:w-[216px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
-                  />
-                </div>
-              </form>
+              </div>
+            </form>
             </div>
             <div className="flex flex-col items-start justify-start w-full gap-5">
               <div className="flex flex-col items-start justify-start gap-3">
@@ -128,7 +128,7 @@ import {
               </div>
             </div>
             <div className="flex items-center gap-5">
-              <Link to="/passenger-info">
+              <Link to="/booking">
                 <button className="py-2 px-4 border-[1px] border-[#605DEC] text-[#605DEC] rounded hover:bg-[#605DEC] hover:text-white transition-all duration-200">
                   Back to passenger info
                 </button>

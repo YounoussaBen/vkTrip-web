@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom";
 import { bag } from "../assets/images";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { PriceDetails } from "../container";
-// import { bookFlight, sendPassenger } from "../data/_registration_api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css'; 
+import countryList from 'react-select-country-list'
+import Select from 'react-select'
 
-const PassengerInfo = () => {
+const Booking = () => {
   const navigate = useNavigate();
   const [sameAsPassenger, setSameAsPassenger] = useState(false);
 
@@ -16,27 +19,29 @@ const PassengerInfo = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [passportNumber, setPassportNumber] = useState("");
+  
   const [nationality, setNationality] = useState("");
-  const [passportExpirationDate, setPassportExpirationDate] = useState("");
+  const countries = useMemo(() => countryList().getData(), [])
 
-  const [emergencyFirstName, setEmergencyFirstName] = useState("");
-  const [emergencyLastName, setEmergencyLastName] = useState("");
+  const [gender, setGender] = useState("");
+  const genders =  [
+    { value: "female", label: "Female" },
+    { value: "male", label: "Male" },
+    { value: "other", label: "Other" }
+  ];
+  const [emergencyFullName, setEmergencyFullName] = useState("");
   const [emergencyEmail, setEmergencyEmail] = useState("");
   const [emergencyPhoneNumber, setEmergencyPhoneNumber] = useState("");
 
   const handleCheckboxChange = (e) => {
-    e.preventDefault();
     setSameAsPassenger(e.target.checked);
 
     if (e.target.checked) {
-      setEmergencyFirstName(firstName);
-      setEmergencyLastName(lastName);
+      setEmergencyFullName(firstName);
       setEmergencyPhoneNumber(phoneNumber);
       setEmergencyEmail(email);
     } else {
-      setEmergencyFirstName("");
-      setEmergencyLastName("");
+      setEmergencyFullName("");
       setEmergencyEmail("");
       setEmergencyPhoneNumber("");
     }
@@ -56,11 +61,6 @@ const PassengerInfo = () => {
     });
   };
 
-  const index = JSON.parse(localStorage.getItem("flights_selected_index"));
-  console.log("The index of flight on passenger info is ", index);
-  const flights = JSON.parse(localStorage.getItem("flights"));
-  // console.log("the flights details on the page is", flights[index]);
-
 const passengerData = {
   FirstName: firstName,
   LastName: lastName,
@@ -68,48 +68,12 @@ const passengerData = {
   EmailAddress: email,
   DateOfBirth: dateOfBirth,
   PhoneNumber: phoneNumber,
-  PassportNumber: passportNumber,
-  PassportExpiration: passportExpirationDate,
-  PassportCountry: nationality
+  Gender: gender,
+  Nationality: nationality
 }
 
-
-
-
-//   const bookMyFlight = async (e) => {
-//     // e.preventDefault();
-//     // console.log('The departure for round trip is', flightdata['departure'])
-//     // console.log('The arrival round trip is', flightdata['arrival'])
-//     // console.log('The date round trip is', flightdata['date'])
-//     // console.log('The date is', format(date[0].startDate, "yyyy-MM-dd"))
-//     const passengerResponse = await sendPassenger(passengerData);
-//     console.log('The reponse on Passenger inf0 page is', passengerResponse)
-
-//     const currentFlight = JSON.parse(localStorage.getItem("currentFlight"));
-//     console.log('The current flight that i want is', currentFlight)
-
-//     const bookingData={
-//       "trip_type": currentFlight.flight_type,
-//       "total_price":'20000',
-//       "checked_bags":3,
-//       "passengers":[
-//         passengerResponse.data.id
-//       ],
-//       "flights":[
-//         flights[index].id
-//       ]
-//     }
-//        const  response = await bookFlight(bookingData);
-//        console.log("The booking data on Signin.tsx is ", response.data);
-//        localStorage.setItem('booking_data', JSON.stringify(response.data));
-//        const bookData = JSON.parse(localStorage.getItem("booking_data"))
-//        console.log('The booking data in storage',bookData)
-
-//        navigate('/payment') 
-//  }
-
  const isFormValid = () => {
-  return firstName && lastName && dateOfBirth && passportNumber && email && phoneNumber;
+  return firstName && lastName && email && phoneNumber;
 };
 
   return (
@@ -141,7 +105,7 @@ const passengerData = {
               />
               <input
                 type="text"
-                placeholder="Middle Name*"
+                placeholder="Middle Name"
                 className="w-full border-[1px] border-[#A1B0CC] outline-none px-2 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
                 onChange={(e)=> setMiddleName(e.target.value)}
               />
@@ -154,47 +118,37 @@ const passengerData = {
               />
             </form>
             <form className="flex flex-col items-center justify-start w-full gap-4 md:flex-row">
-            <div className="w-full md:w-1/3">
-                <p className=" text-[10px]">Nationality</p>
-              <input
-                type="text"
-                placeholder="Nationality"
-                className=" w-full border-[1px] border-[#A1B0CC] outline-none px-1 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
-                onChange={(e)=> setNationality(e.target.value)}
-              />
+            <div className="w-full md:w-1/3 relative">
+                <input
+                  type="date"
+                  className="w-full border-[1px] border-[#A1B0CC] outline-none px-1 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                />
+                <span className="absolute left-28 top-3.5 text-[#7C8DB0] pointer-events-none">
+                  Date Of Birth*
+                </span>
               </div>
-             <div className="w-full md:w-1/3">
-             <p className=" text-[10px]">Passport Number</p>
-             <input
-                type="text"
-                placeholder="Passport Number"
-                className=" w-full border-[1px] border-[#A1B0CC] outline-none px-1 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
-                onChange={(e)=> setPassportNumber(e.target.value)}
-              />
-             </div>
-
-              <div className="w-full md:w-1/3">
-                <p className=" text-[10px]">Passport Expiration date</p>
-              <input
-                type="date"
-                placeholder="Passport Expiration date"
-                className=" w-full border-[1px] border-[#A1B0CC] outline-none px-1 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
-                onChange={(e)=> setPassportExpirationDate(e.target.value)}
-              />
+              <div className="w-full md:w-1/3 relative">
+                <Select
+                  placeholder="Nationality*"
+                  className=" w-full border-[1px] border-[#A1B0CC] outline-none px-2 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
+                  options={countries}
+                  value={nationality}
+                  onChange={(nationality) => setNationality(nationality)}
+                />
               </div>
-            </form>
-            <form className="flex flex-col items-center justify-start w-full gap-4 mt-2 md:flex-row">
-            <div className="w-full">
-              <p className=" text-[10px]">Date of birth</p>
-              <input
-                type="date"
-                placeholder="Date of birth*"
-                className="w-full border-[1px] border-[#A1B0CC] outline-none px-3 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
-                onChange={(e) => setDateOfBirth(e.target.value)}
-              />
+              <div className="w-full md:w-1/3 relative">
+                <Select
+                  placeholder="Select Gender*"
+                  value= {gender}
+                  options={genders}
+                  className="w-full border-[1px] border-[#A1B0CC] outline-none px-1 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
+                  onChange={(gender) => setGender(gender)}
+                 />
               </div>
             </form>
             <form className="flex flex-col items-center justify-start w-full gap-4 mt-2 md:flex-row">
+            <div className="w-full md:w-1/2 relative">
               <input
                 type="email"
                 placeholder="Email Adress*"
@@ -202,26 +156,16 @@ const passengerData = {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <input
-                type="text"
-                placeholder="Phone Number*"
+            </div>
+            <div className="w-full md:w-1/2 relative">
+              <PhoneInput
                 className="w-full border-[1px] border-[#A1B0CC] outline-none px-2 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
                 value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={(phoneNumber) => setPhoneNumber(phoneNumber)}
               />
+            </div>
             </form>
             <form className="flex flex-col items-center justify-start w-full gap-4 md:flex-row">
-              {/* <input
-                type="text"
-                placeholder="Address"
-                className="w-full border-[1px] border-[#A1B0CC] outline-none px-2 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
-                onClick={(e)=> setAddress(e.target.value)}
-              /> */}
-              {/* <input
-                type="text"
-                placeholder="Known traveller number"
-                className="w-full border-[1px] border-[#A1B0CC] outline-none px-2 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
-              /> */}
             </form>
           </div>
           <div className="flex flex-col items-start w-full gap-4">
@@ -243,20 +187,14 @@ const passengerData = {
             <form className="flex flex-col items-center justify-start w-full gap-4 mt-4 md:flex-row">
               <input
                 type="text"
-                placeholder="First Name*"
+                placeholder="Full Name*"
                 className=" w-full border-[1px] border-[#A1B0CC] outline-none px-2 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
-                value={sameAsPassenger ? firstName : emergencyFirstName}
-                onChange={(e) => setEmergencyFirstName(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Last Name*"
-                className="w-full border-[1px] border-[#A1B0CC] outline-none px-2 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
-                value={sameAsPassenger ? lastName : emergencyLastName}
-                onChange={(e) => setEmergencyLastName(e.target.value)}
+                value={sameAsPassenger ? firstName + " " + lastName : emergencyFullName}
+                onChange={(e) => setEmergencyFullName(e.target.value)}
               />
             </form>
             <form className="flex flex-col items-center justify-start w-full gap-4 mt-2 md:flex-row">
+            <div className="w-full md:w-1/2 relative">
               <input
                 type="email"
                 placeholder="Email Adress*"
@@ -264,13 +202,14 @@ const passengerData = {
                 value={sameAsPassenger ? email : emergencyEmail}
                 onChange={(e) => setEmergencyEmail(e.target.value)}
               />
-              <input
-                type="text"
-                placeholder="Phone Number*"
+            </div>
+            <div className="w-full md:w-1/2 relative">
+              <PhoneInput
                 className="w-full border-[1px] border-[#A1B0CC] outline-none px-2 py-3 text-[#7C8DB0] placeholder:text-[#7C8DB0] rounded"
                 value={sameAsPassenger ? phoneNumber : emergencyPhoneNumber}
                 onChange={(e) => setEmergencyPhoneNumber(e.target.value)}
               />
+            </div>
             </form>
           </div>
           <div className="flex flex-col items-start w-full gap-2">
@@ -289,8 +228,6 @@ const passengerData = {
                 Passenger 
               </p>
               <p className="text-[#6E7491] text-base font-semibold">
-              {/* ${flights[index]?.checked_bag_price}   */}
-              jello
               </p>
             </div>
             <div className="flex flex-col items-center gap-2">
@@ -317,16 +254,6 @@ const passengerData = {
               </div>
             </div>
           </div>
-          {/* <div className="flex items-center gap-5">
-            <button className="py-2 px-4 border-[1px] border-[#605DEC] text-[#605DEC] rounded hover:bg-[#605DEC] hover:text-white transition-all duration-200">
-              Save & close
-            </button>
-            <Link to="/seat-selection">
-              <button className="hidden lg:block py-2 px-4 border-[1px] border-[#7C8DB0] text-[#7C8DB0] bg-[#CBD4E6] rounded hover:bg-[#605DEC] hover:text-white hover:border-[#605DEC] transition-all duration-200">
-                Select seats
-              </button>
-            </Link>
-          </div> */}
         </div>
 
         <div className="w-full h-full sm:w-[400px] justify-between flex-col">
@@ -334,35 +261,26 @@ const passengerData = {
             <PriceDetails
             totalprice={bagPrice}
             // totalprice={parseFloat(flights[index].base_price) + 121}
-            // The price here
             />
             <Link
-            //  to="/payment" 
-            onClick={() => {
-              {
-                console.log('The passenger info are', firstName,middleName, lastName, dateOfBirth, passportNumber, email, phoneNumber)
-                setIsBooking(true)
-                console.log('Booking is clicked', );
-                // bookMyFlight();
+             to="/payment" 
+             onClick={() => {
+              if (isFormValid()) {
+                  console.log('The passenger info are', firstName, middleName, lastName, dateOfBirth, passportNumber, email, phoneNumber);
+                bookMyFlight();
+                setIsBooking(true);
+                toast.success('Success')
+              } else {
+                console.log('The passenger info are', firstName, middleName, lastName, dateOfBirth, passportNumber, email, phoneNumber);
+                toast.error('Please fill all the fields before booking.')
               }
             }}
 
-            // onClick={() => {
-            //   if (isFormValid()) {
-            //       console.log('The passenger info are', firstName, middleName, lastName, dateOfBirth, passportNumber, email, phoneNumber);
-            //     bookMyFlight();
-            //     setIsBooking(true);
-            //     toast.success('Success')
-            //   } else {
-            //     console.log('The passenger info are', firstName, middleName, lastName, dateOfBirth, passportNumber, email, phoneNumber);
-            //     toast.error('Please fill all the fields before booking.')
-            //   }
-            // }}
 
 
              className="mt-5">
               <button 
-              // disabled={!isFormValid()}
+              disabled={!isFormValid()}
               className="py-2 px-4 border-[1px] border-[#7C8DB0] text-[#7C8DB0] bg-[#CBD4E6] rounded hover:bg-[#605DEC] hover:text-white hover:border-[#605DEC] transition-all duration-200">
                {isBooking?(
                 'Booking...'
@@ -386,4 +304,4 @@ const passengerData = {
   );
 };
 
-export default PassengerInfo;
+export default Booking;

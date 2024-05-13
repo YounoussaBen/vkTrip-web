@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { map } from "../assets/images";
 import { FlightCard, PriceDetails } from "../container";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../components/protectedRoute";
@@ -23,7 +23,7 @@ const FlightChoose = () => {
 
   const handleOpenLoginOrPage = () => {
     if (isAuthorized) {
-      history.push("/passenger-info");
+      history.push("/booking");
     } else {
       setIsLoginOpen(true);
     }
@@ -103,7 +103,7 @@ const FlightChoose = () => {
         {!priceShown && (
           <div className="flex flex-col items-start justify-end gap-10 mt-10 lg:items-end">
             <PriceDetails />
-            <Link to="/passenger-info" className="mt-5">
+            <Link to="/booking" className="mt-5">
               <button className="text-[#605DEC] border-2 border-[#605DEC] py-2 px-3 rounded hover:bg-[#605DEC] hover:text-white transition-all duration-200">
                 Save & Close
               </button>

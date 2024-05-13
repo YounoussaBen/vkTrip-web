@@ -1,5 +1,5 @@
 import FlightExplore from "./FlightExplore";
-import PassengerInfo from "./PassengerInfo";
+import Booking from "./Booking";
 import SeatSelect from "./SeatSelection";
 import Payment from "./Payment";
 import Confirm from "./Confirm";
@@ -8,7 +8,7 @@ import Flights from "./Flights";
 
 export {
     FlightExplore,
-    PassengerInfo,
+    Booking,
     SeatSelect,
     Payment,
     Confirm,

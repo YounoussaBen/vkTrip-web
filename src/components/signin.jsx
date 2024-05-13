@@ -2,7 +2,6 @@ import { useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
-import Signup from "./signup";
 import api from "../api"; // Import your api module
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
@@ -41,6 +40,18 @@ const Signin = ({ signin, setSignin, openAnotherModal, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if email format is valid
+    if (!email.includes('@') || !email.includes('.')) {
+      toast.error('Please enter a valid email address.');
+      return;
+    }
+  
+    if (password.trim() == ''){
+        toast.error("Please Enter Password")
+        return;
+      }
+
     setLoading(true); // Set loading to true while making the API call
     try {
       const res = await api.post('/auth/get-token/', { email, password });
@@ -48,6 +59,7 @@ const Signin = ({ signin, setSignin, openAnotherModal, onClose }) => {
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
       // Close signin form after successful login
+      window.location.reload();
     } catch (error) {
       console.error("Login failed:", error.message);
       toast.error("Login failed. Please check your credentials and try again.");
@@ -91,8 +103,6 @@ const Signin = ({ signin, setSignin, openAnotherModal, onClose }) => {
             className="text-[#605DEC] cursor-pointer"
             onClick={() => {
               openAnotherModal()
-                // setSignin(false);
-                // setSignup(true);
                 }
             }
             >
@@ -100,7 +110,6 @@ const Signin = ({ signin, setSignin, openAnotherModal, onClose }) => {
           </span>
         </p>
       </div>
-      {/* {signup && <Signup signup={signup} setSignup={setSignup}/>} */}
       <div className="flex items-center justify-center w-full">
         <button
           className="w-full flex gap-2 items-center justify-center border-[1px] border-[#605DEC] rounded p-3"

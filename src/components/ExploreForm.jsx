@@ -5,11 +5,11 @@ import { suggestions } from "../constants";
 import departure from "../assets/icons/departure.png";
 import arrival from "../assets/icons/arrival.png";
 import calendar from "../assets/icons/calendar.png";
-import person from "../assets/icons/person.png";
 import { format } from "date-fns";
 import { Calendar, DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
+
 
 const AutoSuggest = (initialValue) => {
     const [input, setInput] = useState("");
@@ -26,8 +26,12 @@ const AutoSuggest = (initialValue) => {
       setMatchingSuggestions(filteredSuggestions);
     };
   
+    const extractAirportName = (suggestion) => {
+      return suggestion.split(",")[0].trim(); // Extracting only the airport name
+    };
+  
     const handleSuggestionClick = (suggestion) => {
-      setInput(suggestion);
+      setInput(extractAirportName(suggestion)); // Set only the airport name
       setIsOpen(false);
     };
   
@@ -41,6 +45,8 @@ const AutoSuggest = (initialValue) => {
       handleSuggestionClick,
     };
   };
+
+  
 function ExploreForm() {
     const departureSuggest = AutoSuggest("");
     const arrivalSuggest = AutoSuggest("");
@@ -96,7 +102,9 @@ function ExploreForm() {
             value={departureSuggest.input}
             onChange={departureSuggest.handleInputChange}
             onFocus={() => departureSuggest.setIsOpen(true)}
-            className="uppercase placeholder:capitalize outline-none border-none ml-2 text-base text-[#7C8DB0] placeholder:text-[#7C8DB0] placeholder:text-base placeholder:leading-6"
+            className={`uppercase placeholder:capitalize outline-none border-none ml-2 text-base text-[#7C8DB0] placeholder:text-[#7C8DB0] placeholder:text-base placeholder:leading-6 ${
+              departureSuggest.input ? 'text-xs' : '' // Apply text-xs class if input has a value
+            }`}
           />
           {departureSuggest.isOpen && (
             <ul className="w-[220px] h-56 absolute top-[70px]  bg-white rounded overflow-scroll">
@@ -123,7 +131,9 @@ function ExploreForm() {
             value={arrivalSuggest.input}
             onChange={arrivalSuggest.handleInputChange}
             onFocus={() => arrivalSuggest.setIsOpen(true)}
-            className="uppercase placeholder:capitalize outline-none border-none ml-2 text-base text-[#7C8DB0] placeholder:text-[#7C8DB0] placeholder:text-base placeholder:leading-6"
+            className={`uppercase placeholder:capitalize outline-none border-none ml-2 text-base text-[#7C8DB0] placeholder:text-[#7C8DB0] placeholder:text-base placeholder:leading-6 ${
+              arrivalSuggest.input ? 'text-xs' : '' // Apply text-xs class if input has a value
+            }`}
           />
           {arrivalSuggest.isOpen && (
             <ul className="w-[220px] h-56 absolute top-[70px] bg-white rounded overflow-scroll">
