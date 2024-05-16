@@ -40,7 +40,7 @@ const AuthNavbar = () => {
             )}
             {toggle && (
               <ul className="absolute w-full  z-10 h-fit bg-[#FFFFFF] shadow-xl top-14 left-0 text-[#7C8DB0] flex flex-col gap-2 items-start  scaleUp">
-                <Link to="/logout">
+                <Link to="/confirm">
                   <button
                     className="bg-[#605DEC] w-36 py-2 px-4 md:py-3 md:px-5 rounded-[5px] border-2 border-[#605DEC] text-base text-[#FAFAFA] hover:text-[#605DEC] hover:bg-white hover:border-2 hover:border-[#605DEC] transition-all duration-200"
                     onClick={handleSignOut}
@@ -84,7 +84,7 @@ const AuthNavbar = () => {
         </div>
 
         <div className="items-center hidden gap-5 md:flex">
-          <Link to="/">
+          <Link to="/confirm">
             <button
               className="bg-[#605DEC] py-2 px-4 md:py-3 md:px-5 rounded-[5px] border-2 border-[#605DEC] text-base text-[#FAFAFA] hover:text-[#605DEC] hover:bg-white hover:border-2 hover:border-[#605DEC] transition-all duration-200"
               onClick={handleSignOut}

@@ -1,18 +1,11 @@
 import {
-    AiFillApple,
     AiOutlineCreditCard,
-    AiOutlineGoogle,
   } from "react-icons/ai";
-  import { BsPaypal } from "react-icons/bs";
-  import { FcGoogle } from "react-icons/fc";
-  import { SiBitcoin } from "react-icons/si";
-  import { IoLogoApple } from "react-icons/io";
-  import { iconfacebook } from "../assets/icons";
   import { Link, useNavigate } from "react-router-dom";
   import { PriceDetails } from "../container";
   import { useState } from "react";
   import { toast } from "react-toastify";
-//   import { payFlight } from "../data/_registration_api";
+  import api from "../api";
   
   const Payment = () => {
     const navigate = useNavigate();
@@ -21,6 +14,25 @@ import {
     const [number, setNumber] = useState("");
     const [date, setDate] = useState("");
     const [ccv, setCcv] = useState("");
+    const bookData = JSON.parse(localStorage.getItem("booking_data"))
+    console.log('The payment data in storage',bookData)
+
+    const paymentData = {
+      'booking_id':bookData.id,
+      'total_price':bookData.total_price,
+      'card_token':'tok_visa_cartesBancaires'
+    }
+      
+        const payMyFlight = async (e) => {
+          // e.preventDefault();
+          console.log('The payment data is', paymentData)
+             const  response = await api.post("/payment/visa-card", paymentData);
+             console.log("The payment info on payment.tsx is ", JSON.stringify(response?.data));
+             localStorage.setItem('flights', JSON.stringify(response.data));
+      
+             const tokens = JSON.parse(localStorage.getItem('tokens') || '{}');
+             console.log("The tokens in local storage is ", tokens);
+       }
   
     const submitInputs = (e) => {
       e.preventDefault();
@@ -31,32 +43,16 @@ import {
         ccv.trim() !== "" &&
         date.trim() !== ""
       ) {
-        // payMyFlight()
+        payMyFlight()
         toast.success("Payment sent successfully");
         navigate("/confirm");
       } else {
         toast.warning("Please fill the card details");
       }
     };
-    const bookData = JSON.parse(localStorage.getItem("booking_data"))
-    console.log('The payment data in storage',bookData)
+
   
-// const paymentData = {
-//   'booking_id':bookData.id,
-//   'total_price':bookData.total_price,
-//   'card_token':'tok_visa_cartesBancaires'
-// }
-  
-//     const payMyFlight = async (e) => {
-//       // e.preventDefault();
-//       console.log('The payment data is', paymentData)
-//          const  response = await payFlight(paymentData);
-//          console.log("The payment info on payment.tsx is ", JSON.stringify(response?.data));
-//          localStorage.setItem('flights', JSON.stringify(response.data));
-  
-//          const tokens = JSON.parse(localStorage.getItem('tokens') || '{}');
-//          console.log("The tokens in local storage is ", tokens);
-//    }
+
   
     return (
       <>
