@@ -24,7 +24,7 @@ function App() {
   useEffect(() => {
     // Check if the access token is available in localStorage
     const token = localStorage.getItem("access");
-    setIsLoggedIn(!!token); // Update isLoggedIn based on the presence of the token
+    setIsLoggedIn(!token); // Update isLoggedIn based on the presence of the token
   }, [])
 
   return (
@@ -32,18 +32,18 @@ function App() {
 
     <Router>
       <div className="font-Nunito overflow-hidden max-w-[1440px] mx-auto">
-      {isLoggedIn ? <AuthNavbar /> : <Navbar />} 
-
+      {isLoggedIn ? <Navbar />: <AuthNavbar /> } 
         <Routes>
             <Route path="/explore" element={<FlightExplore />} />
           <Route path="/" element={<Home />} />
           <Route path="/logout" element={<Logout />} />
+          <Route path="/booking" element={<Booking />} />
+          <Route path="/confirm" element={<Confirm />} />
+          <Route path="/payment" element={<Payment />} />
+          
           <Route
             element={
               <ProtectedRoute>
-                <Route path="/confirm" element={<Confirm />} />
-                <Route path="/booking" element={<Booking />} />
-                <Route path="/payment" element={<Payment />} />
                 <Route path="/my-flights" element={<Flights />} />
               </ProtectedRoute>
             }

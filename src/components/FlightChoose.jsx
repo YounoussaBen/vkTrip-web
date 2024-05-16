@@ -8,12 +8,14 @@ import { AuthContext } from "../components/protectedRoute";
 import { useContext } from "react";
 import Signin from "../components/signin";
 import Signup from "../components/signup";
+import {AUTH} from "../constants";
 
 const FlightChoose = () => {
   const [priceShown, setPriceShow] = useState(true);
   const navigate = useNavigate();
 
   const flights = JSON.parse(localStorage.getItem("flights"));
+  console.log("the available flights", flights);
   const cflights = JSON.parse(localStorage.getItem("currentFlight"));
 
   const isAuthorized = useContext(AuthContext);
@@ -22,8 +24,11 @@ const FlightChoose = () => {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
   const handleOpenLoginOrPage = () => {
-    if (isAuthorized) {
-      history.push("/booking");
+    const authValue = localStorage.getItem(AUTH)
+    console.log('The auth value is ', localStorage.getItem(AUTH))
+    if (authValue === 'true') {
+      // history.push("/booking");
+      navigate("/booking");
     } else {
       setIsLoginOpen(true);
     }
@@ -61,43 +66,26 @@ const FlightChoose = () => {
               <span className="text-[#605DEC]">returning </span>flight
             </h1>
           </div>
-          <div className="w-full flex flex-col items-start justify-start  border-[1px] border-[#E9E8FC] rounded-xl">
-            <div
-              onClick={() => {
-                handleOpenLoginOrPage();
-                // handleOpenLoginOrPage()
-              }}
-            >
-              <FlightCard
-                img="{item.airline.logo}"
-                arrival_location="{item.arrival_location}"
-                departure_location="{item.departure_location}"
-                flight_class="{item.flight_class}"
-                passenger_type="{item.passenger_type}"
-                duration="1h"
-                name="{item.airline.name}"
-                date=""
-                stop="{item.stopover}"
-                hnl="no stopover"
-                price="{item.base_price}"
-                trip="{cflights?.flight_type}"
-              />
-            </div>
-            <div className="w-full cursor-pointer border-b-[1px] border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE]">
-              {flights?.length === 0 ? (
+          <div className="flex flex-col items-start justify-start w-full rounded-xl">
+            <div className="w-full cursor-pointer border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE]">
+              {( flights?.count === 0 || flights == null) ? (
                 <div className="p-6 ">No match your search</div>
               ) : (
-                flights?.map((item, index) => (
+                flights?.results.map((item, index) => (
                   <div
-                    onClick={() => {
-                      handleOpenLoginOrPage;
-                    }}
+                  className=""
+                  onClick={() => {
+                    localStorage.setItem("flights_selected_index", index),
+                        console.log("The index of flight is", index),
+                        // navigate("/booking");
+                    handleOpenLoginOrPage();
+                  }}
                   >
                     <FlightCard
                       key={index}
                       img={item.airline.logo}
-                      arrival_location={item.arrival_location}
-                      departure_location={item.departure_location}
+                      arrival_location={item.arrival_location.airport_name}
+                      departure_location={item.departure_location.airport_name}
                       flight_class={item.flight_class}
                       passenger_type={item.passenger_type}
                       duration="1h"
@@ -112,7 +100,8 @@ const FlightChoose = () => {
                       trip={cflights?.flight_type}
                     />
                   </div>
-                ))
+                )
+              )
               )}
             </div>
           </div>

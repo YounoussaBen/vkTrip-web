@@ -1,8 +1,10 @@
 import { Hero } from "../components";
+import {AUTH} from "../constants";
 
 const Home = () => {
+  
   return (
-    <div className="mb-80 mt-40 lg:mt-28">
+    <div className="mt-10 mb-96 lg:mt-28 lg:mb-0">
      <Hero/>
     </div>
   );

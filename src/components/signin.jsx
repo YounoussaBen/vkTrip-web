@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
 import api from "../api"; // Import your api module
 import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import { ACCESS_TOKEN, REFRESH_TOKEN, AUTH } from "../constants";
 import LoadingIndicator from "./loadingIndicator";
+import { AuthContext } from "./protectedRoute";
 
 const LoginForm = ({ email, setEmail, password, setPassword }) => (
   <form className="flex flex-col gap-4">
@@ -27,6 +28,7 @@ const LoginForm = ({ email, setEmail, password, setPassword }) => (
 );
 
 const Signin = ({ signin, setSignin, openAnotherModal, onClose }) => {
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [signup, setSignup] = useState(false);
@@ -54,10 +56,14 @@ const Signin = ({ signin, setSignin, openAnotherModal, onClose }) => {
 
     setLoading(true); // Set loading to true while making the API call
     try {
+      console.log('calling login api')
       const res = await api.post('/auth/get-token/', { email, password });
       // Assuming your API returns tokens upon successful login
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+      localStorage.setItem(AUTH, 'true');
+      console.log('The auth value is ', localStorage.getItem(AUTH))
+      // setIsAuthorized(true); // Set isAuthorized to true in context
       // Close signin form after successful login
       window.location.reload();
     } catch (error) {

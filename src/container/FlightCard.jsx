@@ -15,13 +15,13 @@ const FlightCard = ({
     return (
       <>
   
-  <div className="flex flex-col justify-between p-4 bg-white rounded-lg shadow md:flex-row">
+  <div className="flex flex-col justify-between p-4 mb-5 bg-white border-b-8 rounded-lg shadow border-[#605DEC] md:flex-row">
     <div className="flex items-center gap-2 mb-4 md:mb-0">
       <img src={img} alt={name} className="object-contain w-12 h-12" />
       <div>
         <p className="text-lg font-bold">{name}</p>
-        <p className="text-sm text-gray-500">{`Departure: ${departure_location}, ${departure_location}`}</p>
-        <p className="text-sm text-gray-500">{`Arrival: ${arrival_location}, ${arrival_location}`}</p>
+        <p className="text-sm text-gray-500">{`Departure: ${departure_location}`}</p>
+        <p className="text-sm text-gray-500">{`Arrival: ${arrival_location}`}</p>
       </div>
     </div>
     <div className="flex flex-col items-start justify-center mb-4 md:items-center md:mb-0">
