@@ -1,6 +1,7 @@
-import { hawaiian } from "../assets/logo";
 import React, { useEffect, useState } from 'react';
 import api from '../api';
+import { useNavigate } from "react-router-dom";
+import {AUTH} from "../constants";
 
 const Flight = ({
     img,
@@ -50,38 +51,100 @@ const Flight = ({
 
 // Example usage:
 const ExampleFlight = () => {
-    const [myFlights, setFlights] = useState([]);
+  const navigate = useNavigate();
+    const [myTrueflights, setTrueFlights] = useState([]);
+    const [myFalseFlights, setFalseFlights] = useState([]);
+
+    const handleOpenLoginOrPage = () => {
+      const authValue = localStorage.getItem(AUTH)
+      if (authValue === 'true') {
+        // history.push("/booking");
+        navigate("/booking");
+      } else {
+        setIsLoginOpen(true);
+      }
+    };
+    // const getMyFlight = async () => {
+    //     try {
+    //         const response = await api.get("/booking/user/");
+    //     console.log('the my flight response is ', response)
+    //     console.log('the bookings are', response)
+    //         const flightDetails = await Promise.all(
+    //           response.data.results.map(async (flight) => {
+    //             const flightResponse = await api.get(`/flight/${flight.flights[0]}/`);
+    //             return flightResponse.data;
+    //           })
+    //         );
+        
+    //         setFlights(flightDetails);
+    //       } catch (error) {
+    //         console.error('Error:', error);
+    //       }
+    //   };
+
     const getMyFlight = async () => {
-        try {
-            const response = await api.get("/booking/user/");
-        
-            const flightDetails = await Promise.all(
-              response.data.results.map(async (flight) => {
-                const flightResponse = await api.get(`/flight/${flight.flights[0]}/`);
-                return flightResponse.data;
-              })
-            );
-        
-            setFlights(flightDetails);
-          } catch (error) {
-            console.error('Error:', error);
-          }
-      };
+      try {
+        const response = await api.get("/booking/user/");
+        console.log('the my flight response is ', response)
+        console.log('the bookings are', response)
+        // const flightDetails = await Promise.all(
+        //   response.data.results.map(async (flight) => {
+        //     const flightResponse = await api.get(`/flight/${flight.flights[0]}/`);
+        //     return flightResponse.data;
+        //   })
+        // );
+
+        const trueFlightDetails = await Promise.all(
+          response.data.results
+            .filter(booking => booking.status === true)
+            .map(async (booking) => {
+              console.log('the booking is ', booking)
+              const flightResponse = await api.get(`/flight/${booking.flights[0]}/`);
+              return flightResponse.data;
+            })
+        );
+        const falseFlightDetails = await Promise.all(
+          response.data.results
+            .filter(booking => booking.status === false)
+            .map(async (booking) => {
+              console.log('the booking is ', booking)
+              const flightResponse = await api.get(`/flight/${booking.flights[0]}/`);
+              return flightResponse.data;
+            })
+        );
+    
+        setTrueFlights(trueFlightDetails);
+        setFalseFlights(falseFlightDetails);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
       useEffect(() => {
         getMyFlight();
       }, []);
+      console.log('the my true flights are ', myTrueflights)
+      console.log('the my false flights are ', myFalseFlights)
+      if(myTrueflights === null || myFalseFlights === null){
+          return <div>Loading...</div>
+      }
     return (
         
     <div className='px-10 mb-28'>
         <p className='pb-10 text-3xl font-black'>My flights</p>
-        {(myFlights.count == 0 
-        || myFlights === null
-    ) ? 
+        {(myTrueflights.length === 0) ? 
         (
             <div className="flex flex-col items-start justify-start rounded-xl w-full text-2xl font-bold cursor-pointer border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE] ">No booked flight</div>
         )
-        :(
-            myFlights.map(flight => (
+        :
+        (
+          <div className="">
+            <div className="mb-10">
+              <div className="flex flex-col items-start pb-5 justify-start rounded-xl w-full text-2xl font-bold cursor-pointer border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE] ">
+                <p className='text-2xl font-bold'>Paid Flights</p>
+              </div>
+            {
+               myTrueflights.map(flight => (
                 <Flight
                   img={flight.airline.logo}
                 //   duration={flight.}
@@ -90,13 +153,64 @@ const ExampleFlight = () => {
                 //   stop={flight.stopovers[0].location.airport_name}
                   trip={flight.checked_bag_price}
                   price={flight.base_price}
-                //   hnl={flight.hnl}
+                  // hnl={flight.status}
                   arrival_location={flight.arrival_location.airport_name}
                   departure_location={flight.departure_location.airport_name}
                   flight_class={flight.flight_class}
                   passenger_type={flight.passenger_type}
                 />
               ))
+            }
+            </div>
+
+            <div>
+            <div className="flex flex-col pb-5 items-start justify-start rounded-xl w-full text-2xl font-bold cursor-pointer border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE] ">
+                <p className='text-2xl font-bold'> Not yet paid Flights</p>
+            </div>
+            <div
+            // onClick={() =>{ handleOpenLoginOrPage()}}
+            >
+            {
+               myFalseFlights.map(flight => (
+                <Flight
+                  img={flight.airline.logo}
+                //   duration={flight.}
+                  name={flight.airline.name}
+                //   date={flight.departure_datetime}
+                //   stop={flight.stopovers[0].location.airport_name}
+                  trip={flight.checked_bag_price}
+                  price={flight.base_price}
+                  // hnl={flight.status}
+                  arrival_location={flight.arrival_location.airport_name}
+                  departure_location={flight.departure_location.airport_name}
+                  flight_class={flight.flight_class}
+                  passenger_type={flight.passenger_type}
+                />
+              ))
+            }
+            </div>
+            </div>
+
+          </div>
+
+
+
+            // myTrueflights.map(flight => (
+            //   <Flight
+            //     img={flight.airline.logo}
+            //   //   duration={flight.}
+            //     name={flight.airline.name}
+            //   //   date={flight.departure_datetime}
+            //   //   stop={flight.stopovers[0].location.airport_name}
+            //     trip={flight.checked_bag_price}
+            //     price={flight.base_price}
+            //     hnl={flight.status}
+            //     arrival_location={flight.arrival_location.airport_name}
+            //     departure_location={flight.departure_location.airport_name}
+            //     flight_class={flight.flight_class}
+            //     passenger_type={flight.passenger_type}
+            //   />
+            // ))
         )}
       
     </div>

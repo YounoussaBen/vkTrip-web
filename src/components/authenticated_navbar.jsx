@@ -3,6 +3,7 @@ import { MdOutlineClose } from "react-icons/md";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { useState } from "react";
 import logo from "../assets/images/logo.png";
+import {AUTH} from "../constants";
 
 const AuthNavbar = () => {
   const location = useLocation();
@@ -17,7 +18,8 @@ const AuthNavbar = () => {
   const handleSignOut = () => {
     // Perform any sign out actions here if needed
     // Then reload the window
-    // window.location.reload();
+    localStorage.removeItem('access')
+    window.location.reload();
   };
 
   return (
@@ -52,12 +54,12 @@ const AuthNavbar = () => {
                 <Link to="/logout">
                   <button
                     className="bg-[#605DEC] w-36 py-2 px-4 md:py-3 md:px-5 rounded-[5px] border-2 border-[#605DEC] text-base text-[#FAFAFA] hover:text-[#605DEC] hover:bg-white hover:border-2 hover:border-[#605DEC] transition-all duration-200"
-                    // onClick={handleSignOut}
+                    onClick={handleSignOut}
                   >
                     Profile
                   </button>
                 </Link>
-                <Link to="/logout">
+                <Link >
                   <button
                     className="bg-[#605DEC] w-36 py-2 px-4 md:py-3 md:px-5 rounded-[5px] border-2 border-[#605DEC] text-base text-[#FAFAFA] hover:text-[#605DEC] hover:bg-white hover:border-2 hover:border-[#605DEC] transition-all duration-200"
                     onClick={handleSignOut}
@@ -93,7 +95,7 @@ const AuthNavbar = () => {
             </button>
           </Link>
 
-          <Link to="/logout">
+          <Link >
             <button
               className="bg-[#605DEC] py-2 px-4 md:py-3 md:px-5 rounded-[5px] border-2 border-[#605DEC] text-base text-[#FAFAFA] hover:text-[#605DEC] hover:bg-white hover:border-2 hover:border-[#605DEC] transition-all duration-200"
               onClick={handleSignOut}
