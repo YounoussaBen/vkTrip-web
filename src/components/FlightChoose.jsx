@@ -15,17 +15,14 @@ const FlightChoose = () => {
   const navigate = useNavigate();
 
   const flights = JSON.parse(localStorage.getItem("flights"));
-  console.log("the available flights", flights);
   const cflights = JSON.parse(localStorage.getItem("currentFlight"));
 
   const isAuthorized = useContext(AuthContext);
-  // const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
   const handleOpenLoginOrPage = () => {
     const authValue = localStorage.getItem(AUTH)
-    console.log('The auth value is ', localStorage.getItem(AUTH))
     if (authValue === 'true') {
       // history.push("/booking");
       navigate("/booking");
@@ -35,7 +32,6 @@ const FlightChoose = () => {
   };
 
   const handleClose = () => {
-    console.log("close modal");
     setIsLoginOpen(false);
     setIsRegisterOpen(false);
   };
@@ -76,7 +72,6 @@ const FlightChoose = () => {
                   className=""
                   onClick={() => {
                     localStorage.setItem("flights_selected_index", index),
-                        console.log("The index of flight is", index),
                         // navigate("/booking");
                     handleOpenLoginOrPage();
                   }}

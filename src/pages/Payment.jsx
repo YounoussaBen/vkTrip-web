@@ -29,10 +29,11 @@ const Payment = () => {
         cardNumber: "Card number must be exactly 16 digits",
       }));
     } else {
+            // format the card number into groups of 4 digits separated by spaces
+            // value = value.replace(/(\d{4}(?=\d))/g, '$1 ');
       setError((prevState) => ({ ...prevState, cardNumber: "" }));
     }
-      // format the card number into groups of 4 digits separated by spaces
-  value = value.replace(/(\d{4})/g, '$1 ').trim();
+
 
     setCardNumber(value);
   };
@@ -73,7 +74,6 @@ const Payment = () => {
   };
 
   const bookData = JSON.parse(localStorage.getItem("booking_data"));
-  console.log("The payment data in storage", bookData);
 
   const paymentData = {
     booking_id: bookData.id,
@@ -81,29 +81,20 @@ const Payment = () => {
     card_token: "tok_visa_cartesBancaires",
   };
 
-  console.log("the payment data", paymentData);
-
   const payMyFlight = async () => {
-    // e.preventDefault();
-    console.log("The payment data calling pay my flight", paymentData);
     const response = await api.post("/payment/visa-card", paymentData);
-    console.log(
-      "The payment info on payment.tsx is ",
-      JSON.stringify(response?.data)
-    );
-    //  localStorage.setItem('flights', JSON.stringify(response.data));
   };
 
-  const submitInputs = (e) => {
+  const submitInputs = async (e) => {
     // e.preventDefault();
     if (
       name.trim() !== "" &&
-      number.trim() !== "" &&
+      cardNumber.trim() !== "" &&
       ccv.trim() !== "" &&
-      date.trim() !== ""
+      validityDate.trim() !== ""
     ) {
-      payMyFlight();
-      // navigate("/confirm");
+     await payMyFlight();
+      navigate("/confirm");
     } else {
       toast.warning("Please fill the card details");
     }
@@ -186,17 +177,16 @@ const Payment = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-5">
+          <div className="block lg:flex   items-center gap-5">
             <Link to="/booking">
-              <button className="py-2 px-4 border-[1px] border-[#605DEC] text-[#605DEC] rounded hover:bg-[#605DEC] hover:text-white transition-all duration-200">
+              <button className=" hidden lg:flex py-2 px-4 border-[1px] border-[#605DEC] text-[#605DEC] rounded hover:bg-[#605DEC] hover:text-white transition-all duration-200">
                 Back to passenger info
               </button>
             </Link>
             <Link>
               <button
-                className="hidden lg:block py-2 px-4 border-[1px] border-[#7C8DB0] text-[#7C8DB0] bg-[#CBD4E6] rounded hover:bg-[#605DEC] hover:text-white hover:border-[#605DEC] transition-all duration-200"
+                className="block py-2 px-4 border-[1px] border-[#7C8DB0] text-[#7C8DB0] bg-[#CBD4E6] rounded hover:bg-[#605DEC] hover:text-white hover:border-[#605DEC] transition-all duration-200"
                 onClick={submitInputs}
-                // onClick={(e)=> payMyFlight()}
               >
                 Confirm and pay
               </button>

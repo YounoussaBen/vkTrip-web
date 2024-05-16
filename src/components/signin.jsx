@@ -56,13 +56,11 @@ const Signin = ({ signin, setSignin, openAnotherModal, onClose }) => {
 
     setLoading(true); // Set loading to true while making the API call
     try {
-      console.log('calling login api')
       const res = await api.post('/auth/get-token/', { email, password });
       // Assuming your API returns tokens upon successful login
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
       localStorage.setItem(AUTH, 'true');
-      console.log('The auth value is ', localStorage.getItem(AUTH))
       // setIsAuthorized(true); // Set isAuthorized to true in context
       // Close signin form after successful login
       window.location.reload();

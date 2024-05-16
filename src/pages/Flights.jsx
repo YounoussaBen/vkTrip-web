@@ -1,5 +1,6 @@
-import React from 'react';
 import { hawaiian } from "../assets/logo";
+import React, { useEffect, useState } from 'react';
+import api from '../api';
 
 const Flight = ({
     img,
@@ -36,7 +37,7 @@ const Flight = ({
                 </div>
                 <div className="flex flex-col items-end justify-center">
                     <p className="text-lg font-bold text-gray-700">{`$${price}`}</p>
-                    <p className="text-sm text-gray-500">{trip}</p>
+                    <p className="text-sm text-gray-500">{`Bag Price: ${trip}`}</p>
                     <div className="mt-2 text-right">
                         <p className="text-sm text-gray-500">{`Class: ${flight_class}`}</p>
                         <p className="text-sm text-gray-500">{`Passenger Type: ${passenger_type}`}</p>
@@ -49,50 +50,55 @@ const Flight = ({
 
 // Example usage:
 const ExampleFlight = () => {
+    const [myFlights, setFlights] = useState([]);
+    const getMyFlight = async () => {
+        try {
+            const response = await api.get("/booking/user/");
+        
+            const flightDetails = await Promise.all(
+              response.data.results.map(async (flight) => {
+                const flightResponse = await api.get(`/flight/${flight.flights[0]}/`);
+                return flightResponse.data;
+              })
+            );
+        
+            setFlights(flightDetails);
+          } catch (error) {
+            console.error('Error:', error);
+          }
+      };
+      useEffect(() => {
+        getMyFlight();
+      }, []);
     return (
-    <div className='mb-28'>
-        <Flight
-                img={hawaiian}
-                duration="16h 45m"
-                name="Hawaiian Airlines"
-                date="February 25th, 2023"
-                stop="1 stop"
-                trip="round trip"
-                price="624"
-                hnl="2h 45m in HNL"
-                arrival_location="Tokyo, Japan"
-                departure_location="Narita airport"
-                flight_class="Business"
-                passenger_type="Adult"
-        />         
-        <Flight
-            img={hawaiian}
-            duration="16h 45m"
-            name="Hawaiian Airlines"
-            date="February 25th, 2023"
-            stop="1 stop"
-            trip="round trip"
-            price="624"
-            hnl="2h 45m in HNL"
-            arrival_location="Tokyo, Japan"
-            departure_location="Narita airport"
-            flight_class="Business"
-            passenger_type="Adult"
-        />
-        <Flight
-        img={hawaiian}
-        duration="16h 45m"
-        name="Hawaiian Airlines"
-        date="February 25th, 2023"
-        stop="1 stop"
-        trip="round trip"
-        price="624"
-        hnl="2h 45m in HNL"
-        arrival_location="Tokyo, Japan"
-        departure_location="Narita airport"
-        flight_class="Business"
-        passenger_type="Adult"
-        />
+        
+    <div className='px-10 mb-28'>
+        <p className='pb-10 text-3xl font-black'>My flights</p>
+        {(myFlights.count == 0 
+        || myFlights === null
+    ) ? 
+        (
+            <div className="flex flex-col items-start justify-start rounded-xl w-full text-2xl font-bold cursor-pointer border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE] ">No booked flight</div>
+        )
+        :(
+            myFlights.map(flight => (
+                <Flight
+                  img={flight.airline.logo}
+                //   duration={flight.}
+                  name={flight.airline.name}
+                //   date={flight.departure_datetime}
+                //   stop={flight.stopovers[0].location.airport_name}
+                  trip={flight.checked_bag_price}
+                  price={flight.base_price}
+                //   hnl={flight.hnl}
+                  arrival_location={flight.arrival_location.airport_name}
+                  departure_location={flight.departure_location.airport_name}
+                  flight_class={flight.flight_class}
+                  passenger_type={flight.passenger_type}
+                />
+              ))
+        )}
+      
     </div>
     );
 };

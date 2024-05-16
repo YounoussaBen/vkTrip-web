@@ -8,10 +8,8 @@ const Confirm = () => {
     const[close, setClose] = useState(true)
 
     const index = JSON.parse(localStorage.getItem("flights_selected_index"))
-    console.log("The index of flight is", index)
     
     const flights = JSON.parse(localStorage.getItem("flights"));
-    console.log("the available flights", flights);
 
   return (
     <>

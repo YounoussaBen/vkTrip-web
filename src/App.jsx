@@ -40,11 +40,11 @@ function App() {
           <Route path="/booking" element={<Booking />} />
           <Route path="/confirm" element={<Confirm />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/my-flights" element={<Flights />} />
           
           <Route
             element={
               <ProtectedRoute>
-                <Route path="/my-flights" element={<Flights />} />
               </ProtectedRoute>
             }
           />

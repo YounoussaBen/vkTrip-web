@@ -16,13 +16,10 @@ const GoogleSignInButton = ({ onSuccess, onFailure }) => {
           "backend":"google-oauth2",
           "token": res.accessToken
         };
-
-        //console.log(user)
         const {data} = await api.post('/auth/social-login/convert-token/', user ,{headers: {
             'Content-Type': 'application/json'
         }}, {withCredentials: true});
 
-        //console.log(data, data['access_token'])
         axios.defaults.headers.common['Authorization'] = `Bearer ${data['access_token']}`;
         localStorage.clear();
         localStorage.setItem('access_token', data.access_token);

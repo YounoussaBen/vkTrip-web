@@ -75,9 +75,6 @@ const Signup = ({signup, setSignup, openAnotherModal, onClose}) => {
         password
       });
   
-      // Handle successful signup here, e.g., show a success message, redirect user, etc.
-      console.log('Signup successful:', response.data);
-  
       // Sign in the user using the same credentials after successful sign up
       const signInResponse = await api.post('/auth/get-token/', {
         email,

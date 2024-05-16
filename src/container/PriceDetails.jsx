@@ -3,10 +3,8 @@ import { format } from "date-fns";
 
 const PriceDetails = ({totalprice}) => {
   const index = JSON.parse(localStorage.getItem("flights_selected_index"))
-  console.log("The index of flight is", index)
 
   const flights = JSON.parse(localStorage.getItem("flights"));
-    console.log("the available flights", flights);
   return (
     <>
       <div className="flex flex-col items-start lg:items-end justify-start lg:justify-end gap-5 w-full h-full sm:w-[400px]">

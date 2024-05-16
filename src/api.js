@@ -26,7 +26,6 @@ api.interceptors.request.use(
             // config.headers.Accept = 'application/json';
             config.headers['Content-Type'] = 'application/json';
         }
-        console.log('Headers:', config.headers); // Add this line
         return config;
     },
     (error) => {

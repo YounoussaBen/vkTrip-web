@@ -52,7 +52,6 @@ const AutoSuggest = ({initialValue}) => {
   
 function ExploreForm({}) {
   const currentFlight = JSON.parse(localStorage.getItem("currentFlight"));
-  console.log("Current Flight is: ", currentFlight);
   const navigate = useNavigate();
     const departureSuggest = AutoSuggest("");
     const arrivalSuggest = AutoSuggest("");
@@ -86,13 +85,7 @@ function ExploreForm({}) {
     };
 
      async function getOneWayFlight(data){
-      // e.preventDefault();
-      console.log('The departure is', flightdata.departure)
-      console.log('The arrival is', flightdata['arrival'])
-      console.log('The date is', flightdata['date'])
-      console.log('The date is', format(date[0].startDate, "yyyy-MM-dd"))
          try {
-          console.log('calling login api')
           const response = await api.get('/flight/one-way-search/', { params: {
             departure_location: data.departure,
             arrival_location: data.arrival,
@@ -100,12 +93,10 @@ function ExploreForm({}) {
             flight_class: data.flight_class,
             passenger_type: data.passenger_type,
           },});
-          console.log("The flights data on Signin.tsx is ", JSON.stringify(response?.data));
           localStorage.setItem('flights', JSON.stringify(response.data));
           setIsSearching(false)
           navigate('/explore')
         } catch (error) {
-          console.error("Login failed:", error);
           toast.error("Login failed. Please check your credentials and try again.");
         } finally {
           setIsSearching(false)
@@ -113,17 +104,10 @@ function ExploreForm({}) {
    }
   
     const getRoundFlight = async (e) => {
-      // e.preventDefault();
-      console.log('The departure for round trip is', flightdata['departure'])
-      console.log('The arrival round trip is', flightdata['arrival'])
-      console.log('The date round trip is', flightdata['date'])
-      console.log('The date is', format(date[0].startDate, "yyyy-MM-dd"))
          const  response = await getRoundTripFlight(flightdata);
-         console.log("The auth data on Signin.tsx is ", JSON.stringify(response?.data));
          localStorage.setItem('flights', JSON.stringify(response.data));
   
          const tokens = JSON.parse(localStorage.getItem('tokens') || '{}');
-         console.log("The tokens in local storage is ", tokens);
          navigate('/explore') 
    }
 
@@ -269,13 +253,10 @@ function ExploreForm({}) {
         <Link 
          onClick={() => {
           {
-            console.log('clicked heree')
-            console.log('Passenger data on this page', flightdata);
             if(isFormValid()){
               setIsSearching(true)
             flightType === 'One Way' ? getOneWayFlight(flightdata) : getRoundFlight(flightdata)
             }else{
-              console.log('The passenger info are', firstName, middleName, lastName, dateOfBirth, passportNumber, email, phoneNumber);
             toast.error('Please fill all the fields before booking.')
             }
             localStorage.setItem('currentFlight', JSON.stringify(flightdata));

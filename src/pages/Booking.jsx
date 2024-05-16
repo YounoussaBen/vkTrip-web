@@ -77,18 +77,13 @@ const Booking = () => {
   const bookMyFlight = async (e) => {
     toast.success("Booking your flight...");
 
-    console.log('The data for passenger is', passengerData)
     const passengerResponse = await api.post("/passenger/", passengerData);
-    console.log("The reponse on Passenger inf0 page is", passengerResponse.data);
     
     const currentFlight = JSON.parse(localStorage.getItem("currentFlight"));
-    console.log("The current flight that i want is", currentFlight);
     
     const index = JSON.parse(localStorage.getItem("flights_selected_index"))
-    console.log("The index of flight is", index)
     
     const flights = JSON.parse(localStorage.getItem("flights"));
-    console.log("the available flights", flights);
 
     const bookingData = {
       trip_type: currentFlight.flight_type,
@@ -97,12 +92,9 @@ const Booking = () => {
       passengers: [passengerResponse.data.id],
       flights: [flights.results[index].id],
     };
-    console.log("the booking data is", bookingData);
     const response = await api.post("/booking/", bookingData);
-    console.log("The booking data on booking page is ", response.data);
     localStorage.setItem("booking_data", JSON.stringify(response.data));
     const bookData = JSON.parse(localStorage.getItem("booking_data"));
-    console.log("The booking data in storage", bookData);
     setIsBooking(false);  
     navigate("/payment");
   };
@@ -264,43 +256,19 @@ const Booking = () => {
         <div className="w-full h-full sm:w-[400px] justify-between flex-col">
           <div className="flex flex-col items-start justify-end gap-10 mt-10 lg:items-end">
             <PriceDetails
-              // totalprice={parseFloat(flights.results[index].base_price) + 121}
             />
             <Link
               onClick={() => {
                 if (isFormValid()) {
-                  console.log(
-                    "The passenger info are",
-                    firstName,
-                    middleName,
-                    lastName,
-                    dateOfBirth,
-                    email,
-                    phoneNumber,
-                    nationality.label,
-                    gender.label
-                  );
                   setIsBooking(true);
                   bookMyFlight();
                 } else {
-                  console.log(
-                    "The passenger info are that is not corretx",
-                    firstName,
-                    middleName,
-                    lastName,
-                    dateOfBirth,
-                    email,
-                    phoneNumber,
-                    nationality.label,
-                    gender.label
-                  );
                   toast.error("Please fill all the fields before booking.");
                 }
               }}
               className="mt-5"
             >
               <button
-                // disabled={!isFormValid()}
                 className="py-2 px-4 border-[1px] border-[#7C8DB0] text-[#7C8DB0] bg-[#CBD4E6] rounded hover:bg-[#605DEC] hover:text-white hover:border-[#605DEC] transition-all duration-200"
               >
                 {isBooking
