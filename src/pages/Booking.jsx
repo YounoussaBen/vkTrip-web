@@ -259,45 +259,6 @@ const Booking = () => {
               </div>
             </form>
           </div>
-          <div className="flex flex-col items-start w-full gap-2">
-            <h1 className="titleh1">Bag information</h1>
-            <p className="text-[#7C8DB0] text-base font-normal">
-              Each passenger is allowed one free carry-on bag and one personal
-              item. First checked bag for each passenger is also free. Second
-              bag check fees are waived for loyalty program members.
-            </p>
-          </div>
-          <div className="w-full sm:w-[400px] flex items-start justify-between gap-10">
-            <div className="flex flex-col items-start gap-2">
-              <p className="text-[#7C8DB0] text-base font-semibold">
-                Passenger
-              </p>
-              <p className="text-[#6E7491] text-base font-semibold"></p>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <p className="text-[#7C8DB0] text-base font-semibold">
-                Checked bags
-              </p>
-              <div className="flex items-center gap-4 ">
-                <button
-                  className="text-[#605DEC] text-3xl font-semibold cursor-pointer disabled:cursor-not-allowed"
-                  onClick={() => handleBagNumber("numbag", "d")}
-                  disabled={numOfBag.numbag <= 0}
-                >
-                  -
-                </button>
-                <span className="text-[#6E7491] text-base font-semibold">
-                  {numOfBag.numbag}
-                </span>
-                <button
-                  className="text-[#605DEC] text-xl font-semibold cursor-pointer "
-                  onClick={() => handleBagNumber("numbag", "i")}
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div className="w-full h-full sm:w-[400px] justify-between flex-col">

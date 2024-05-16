@@ -10,7 +10,7 @@ import { Calendar, DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { toast } from "react-toastify";
-import api from "../api"; // Import your api module
+import {api }from "../api"; // Import your api module
 import { useNavigate } from "react-router-dom";
 
 

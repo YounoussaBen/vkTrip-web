@@ -64,7 +64,7 @@ const PriceDetails = ({totalprice}) => {
           <div className="w-full flex items-center justify-between text-[#27273F] text-sm sm:text-base">
             <p>Total</p>
             <p>
-              ${parseFloat(flights.results[index]?.base_price + flights.results[index]?.checked_bag_price).toFixed(2)}
+              ${(parseFloat(flights.results[index]?.base_price )+ parseFloat(flights.results[index]?.checked_bag_price)).toFixed(2)}
               </p>
           </div>
         </div>

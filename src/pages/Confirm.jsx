@@ -7,6 +7,12 @@ import { creditCard } from "../assets/icons";
 const Confirm = () => {
     const[close, setClose] = useState(true)
 
+    const index = JSON.parse(localStorage.getItem("flights_selected_index"))
+    console.log("The index of flight is", index)
+    
+    const flights = JSON.parse(localStorage.getItem("flights"));
+    console.log("the available flights", flights);
+
   return (
     <>
     <div className="mb-28 flex flex-col items-start justify-between w-full h-full gap-10 px-8 mt-20 lg:flex-row ">
@@ -26,7 +32,7 @@ const Confirm = () => {
           <div className="flex flex-col items-start justify-start w-full gap-4">
              <h1 className="text-[#6E7491] text-xl sm:text-2xl font-bold">Flight summary</h1>
              <div className="flex flex-col items-start w-full gap-2 ">
-             <p className="text-[#7C8DB0] text-base sm:text-lg font-semibold">Departing February 25th, 2023</p>
+             <p className="text-[#7C8DB0] text-base sm:text-lg font-semibold">Departing {flights.results[index].departure_datetimeŒ}</p>
              <div
               className="w-full cursor-pointer border-[1px] border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE]"
             >
@@ -43,9 +49,9 @@ const Confirm = () => {
             </div>
             <p className="text-[#7C8DB0] text-sm sm:text-base font-normal">Seat 9F (economy, window), 1 checked bag</p>
              </div>
-             <div className="flex flex-col items-start w-full gap-2 mt-8">
-             <p className="text-[#7C8DB0] text-base sm:text-lg font-semibold">Arriving March 21st, 2023</p>
-             <div
+             {/* <div className="flex flex-col items-start w-full gap-2 mt-8"> */}
+             {/* <p className="text-[#7C8DB0] text-base sm:text-lg font-semibold">Arriving March 21st, 2023</p> */}
+             {/* <div
               className="w-full cursor-pointer border-[1px] border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE]"
             >
               <FlightCard
@@ -58,9 +64,9 @@ const Confirm = () => {
                 price="$624"
                 trip="round trip"
               />
-            </div>
-            <p className="text-[#7C8DB0] text-sm sm:text-base font-normal">Seat 4F (business, window), 1 checked bag</p>
-             </div>
+            </div> */}
+            {/* <p className="text-[#7C8DB0] text-sm sm:text-base font-normal">Seat 4F (business, window), 1 checked bag</p> */}
+             {/* </div> */}
           </div>
 
        </div>
