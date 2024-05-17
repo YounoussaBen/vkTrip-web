@@ -87,7 +87,7 @@ const Booking = () => {
 
     const bookingData = {
       trip_type: currentFlight.flight_type,
-      total_price: "20000",
+      total_price: [flights.results[index].base_price],
       checked_bags: 3,
       passengers: [passengerResponse.data.id],
       flights: [flights.results[index].id],
