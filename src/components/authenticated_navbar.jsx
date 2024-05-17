@@ -45,7 +45,6 @@ const AuthNavbar = () => {
                 <Link to="/my-flights">
                   <button
                     className="bg-[#605DEC] w-36 py-2 px-4 md:py-3 md:px-5 rounded-[5px] border-2 border-[#605DEC] text-base text-[#FAFAFA] hover:text-[#605DEC] hover:bg-white hover:border-2 hover:border-[#605DEC] transition-all duration-200"
-                    // onClick={handleSignOut}
                   >
                     My flights
                   </button>
@@ -56,15 +55,7 @@ const AuthNavbar = () => {
                     className="bg-[#605DEC] w-36 py-2 px-4 md:py-3 md:px-5 rounded-[5px] border-2 border-[#605DEC] text-base text-[#FAFAFA] hover:text-[#605DEC] hover:bg-white hover:border-2 hover:border-[#605DEC] transition-all duration-200"
                     onClick={handleSignOut}
                   >
-                    Profile
-                  </button>
-                </Link>
-                <Link >
-                  <button
-                    className="bg-[#605DEC] w-36 py-2 px-4 md:py-3 md:px-5 rounded-[5px] border-2 border-[#605DEC] text-base text-[#FAFAFA] hover:text-[#605DEC] hover:bg-white hover:border-2 hover:border-[#605DEC] transition-all duration-200"
-                    onClick={handleSignOut}
-                  >
-                    Log Out
+                    Sign out
                   </button>
                 </Link>
 

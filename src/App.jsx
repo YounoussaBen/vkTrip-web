@@ -1,16 +1,13 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Home, Confirm, FlightExplore, Booking, Payment, Flights } from "./pages";
 import NotFound from "./pages/notFound";
 import ProtectedRoute from "./components/protectedRoute";
-import { Navigate } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/navbar";
 import AuthNavbar from "./components/authenticated_navbar";
 import Footer from "./components/footer";
 import { ToastContainer } from "react-toastify";
-import { useState } from "react";
-import { useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
 
 function Logout() {
@@ -19,35 +16,56 @@ function Logout() {
 }
 
 function App() {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
-    // Check if the access token is available in localStorage
     const token = localStorage.getItem("access");
-    setIsLoggedIn(!token); // Update isLoggedIn based on the presence of the token
-  }, [])
+    setIsLoggedIn(!!token); // Update isLoggedIn based on the presence of the token
+  }, []);
 
   return (
-
-
     <Router>
       <div className="font-Nunito overflow-hidden max-w-[1440px] mx-auto">
-      {isLoggedIn ? <Navbar />: <AuthNavbar /> } 
+        {isLoggedIn ? <AuthNavbar /> : <Navbar />}
         <Routes>
-            <Route path="/explore" element={<FlightExplore />} />
           <Route path="/" element={<Home />} />
+          <Route path="/explore" element={<FlightExplore />} />
           <Route path="/logout" element={<Logout />} />
-          <Route path="/booking" element={<Booking />} />
-          <Route path="/confirm" element={<Confirm />} />
-          <Route path="/payment" element={<Payment />} />
-          <Route path="/my-flights" element={<Flights />} />
-          
+          <Route path="*" element={<NotFound />} />
+
           <Route
+            path="/booking"
             element={
               <ProtectedRoute>
+                <Booking />
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/confirm"
+            element={
+              <ProtectedRoute>
+                <Confirm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/payment"
+            element={
+              <ProtectedRoute>
+                <Payment />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-flights"
+            element={
+              <ProtectedRoute>
+                <Flights />
+              </ProtectedRoute>
+            }
+         
+          ></Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
