@@ -4,6 +4,7 @@ import { FlightCard } from "../container";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns"; // Import format function for date formatting
+import { PriceDetails } from "../container";
 
 const Confirm = () => {
     const [close, setClose] = useState(true);
@@ -13,6 +14,7 @@ const Confirm = () => {
     const [flights, setFlights] = useState(null); // State for flights data
     const [index, setIndex] = useState(null); // State for index
     const [totalPrice, setTotalPrice] = useState(0);
+    const [checkedBagPrice, setCheckedBagPrice] = useState(null)
     const [flightPrice, setFlightPrice] = useState(0);
     const navigate = useNavigate();
 
@@ -36,8 +38,6 @@ const Confirm = () => {
                 // Set confirmation number
                 setConfirmationNumber(bookData.id);
 
-                const totalPrice = bookData.total_price;
-               setTotalPrice(totalPrice);
                 // Set flight summary
                 const selectedIndex = JSON.parse(localStorage.getItem("flights_selected_index"));
                 const flightsData = JSON.parse(localStorage.getItem("flights")); // Retrieve flights data
@@ -52,6 +52,14 @@ const Confirm = () => {
 
                 const flightPrice = selectedFlight.base_price;
                   setFlightPrice(flightPrice);
+
+                const checkedBagPrice = selectedFlight.checked_bag_price;
+                    setCheckedBagPrice(checkedBagPrice);
+
+                const totalPrice = flightPrice + checkedBagPrice;
+                  setTotalPrice(totalPrice);
+
+                
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -111,18 +119,10 @@ const Confirm = () => {
                   <div className="flex flex-col items-start w-full gap-5">
                      <h1 className="text-[#6E7491] text-xl sm:text-2xl font-bold">Price breakdown</h1>
                      <div className="w-full h-full sm:w-[400px] flex flex-col items-start gap-3 ">
-                           <div className="flex items-center justify-between w-full text-[#6E7491] text-sm sm:text-base gap-3" >
-                              <p>Departing Flight</p>
-                              <p>${flightPrice}</p>
-                           </div>
-                           {/* Add more breakdowns as needed */}
-                           <hr className="w-full mt-5"/>
-                           <div className="flex items-center justify-between w-full text-[#36374A] text-sm sm:text-base gap-3" >
-                              <p>Amount paid</p>  
-                              <p>${totalPrice}</p>
-                           </div>
-                           <hr className="w-full "/>
-                     </div>
+                     <div className="flex flex-col items-start justify-end gap-10 mt-10 lg:items-end">
+                        <PriceDetails />
+                        </div>
+                    </div>
                   </div>
                </div>
              </div>
