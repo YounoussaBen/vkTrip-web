@@ -12,7 +12,7 @@ const SignupForm = ({ email, setEmail, password, setPassword, confirmPassword, s
   <form className="flex flex-col gap-4">
     <input
       type="email"
-      placeholder="Email or Phone Number"
+      placeholder="Email Address"
       value={email}
       onChange={(e) => setEmail(e.target.value)}
       className="outline-none border-[1px] border-[#A1B0CC] p-2 placeholder:text-[#7C8DB0] text-[#7C8DB0] rounded"

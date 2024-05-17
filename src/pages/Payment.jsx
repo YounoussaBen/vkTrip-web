@@ -1,103 +1,73 @@
 import { AiOutlineCreditCard } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { PriceDetails } from "../container";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
 import api from "../api";
+import { loadStripe } from "@stripe/stripe-js";
+import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
+import { toast } from "react-toastify";
 
-const Payment = () => {
+const PaymentForm = () => {
   const navigate = useNavigate();
-
+  const stripe = useStripe();
+  const elements = useElements();
   const [name, setName] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [validityDate, setValidityDate] = useState("");
-  const [ccv, setCcv] = useState("");
-  const [error, setError] = useState({
-    cardNumber: "",
-    cvv: "",
-    validityDate: "",
-  });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleCardNumberChange = (e) => {
-    // const value = e.target.value;
-    let value = e.target.value.replace(/\s+/g, ''); // remove all spaces
-    const regex = /^\d{16}$/;
+  
+  const handlePayment = async () => {
+    try {
+      if (!stripe || !elements) {
+        console.error("Stripe.js hasn't loaded yet.");
+        return;
+      }
 
-    if (!regex.test(value)) {
-      setError((prevState) => ({
-        ...prevState,
-        cardNumber: "Card number must be exactly 16 digits",
-      }));
-    } else {
-            // format the card number into groups of 4 digits separated by spaces
-            // value = value.replace(/(\d{4}(?=\d))/g, '$1 ');
-      setError((prevState) => ({ ...prevState, cardNumber: "" }));
+      const { paymentMethod, error } = await stripe.createPaymentMethod({
+        type: "card",
+        card: elements.getElement(CardElement),
+      });
+
+      if (error) {
+        console.error("Stripe error:", error);
+        // Handle error
+      } else {
+        // Send the paymentMethod.id to your backend
+        const token = localStorage.getItem("access");
+        const bookData = JSON.parse(localStorage.getItem("booking_data"));
+        const response = await api.post("/payment/visa-card", {
+          card_token: 'tok_visa_cartesBancaires',
+          booking_id: bookData.id,
+          total_price: parseFloat(bookData.total_price),
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      // Log the response data
+      console.log("API response:", response.data);
+        toast.success("Payment successful!");
+          // Handle response from backend
+        navigate("/confirm");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error
     }
-
-
-    setCardNumber(value);
-  };
-
-  const handleCvvChange = (e) => {
-    const value = e.target.value;
-    const regex = /^\d{3}$/;
-
-    if (!regex.test(value)) {
-      setError((prevState) => ({
-        ...prevState,
-        cvv: "CVV must be exactly 3 digits",
-      }));
-    } else {
-      setError((prevState) => ({ ...prevState, cvv: "" }));
-    }
-
-    setCcv(value);
-  };
-
-  const handleValidityDateChange = (e) => {
-    let value = e.target.value;
-    const regex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
-
-      // remove all non-digit and non-slash characters
-  value = value.replace(/[^0-9/]/g, '');
-
-    if (!regex.test(value)) {
-      setError((prevState) => ({
-        ...prevState,
-        validityDate: "Date must be in MM/YY format",
-      }));
-    } else {
-      setError((prevState) => ({ ...prevState, validityDate: "" }));
-    }
-
-    setValidityDate(value);
-  };
-
-  const bookData = JSON.parse(localStorage.getItem("booking_data"));
-
-  const paymentData = {
-    booking_id: bookData.id,
-    total_price: parseFloat(bookData.total_price),
-    card_token: "tok_visa_cartesBancaires",
-  };
-
-  const payMyFlight = async () => {
-    const response = await api.post("/payment/visa-card", paymentData);
   };
 
   const submitInputs = async (e) => {
-    // e.preventDefault();
-    if (
-      name.trim() !== "" &&
-      cardNumber.trim() !== "" &&
-      ccv.trim() !== "" &&
-      validityDate.trim() !== ""
-    ) {
-     await payMyFlight();
-      navigate("/confirm");
+    e.preventDefault();
+    if (name.trim() !== "") {
+      setIsLoading(true); // Set loading to true when payment process starts
+      await handlePayment();
+      setIsLoading(false); // Set loading to false when payment process completes
     } else {
       toast.warning("Please fill the card details");
     }
+  };  
+
+  const handleCardChange = (e) => {
+    // Handle card change
   };
 
   return (
@@ -127,37 +97,10 @@ const Payment = () => {
                 onChange={(e) => setName(e.target.value)}
                 className="w-full sm:w-[480px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
               />
-              <input
-                type="number"
-                value={cardNumber}
-                onChange={handleCardNumberChange}
-                placeholder="Card Number"
+              <CardElement
                 className="w-full sm:w-[480px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
+                onChange={handleCardChange}
               />
-              {error.cardNumber && <p className="text-sm text-neutral-400">{error.cardNumber}</p>}
-              <div className="flex items-center justify-center gap-5">
-                <div className="flex flex-col">
-                <input
-                  type="text"
-                  value={validityDate}
-                  onChange={handleValidityDateChange}
-                  placeholder="MM/YY"
-                  className="w-full sm:w-[240px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
-                />
-                {error.validityDate && <p className="text-sm text-neutral-400">{error.validityDate}</p>}
-                </div>
-
-                <div className="flex flex-col">
-                <input
-                  type="number"
-                  value={ccv}
-                  onChange={handleCvvChange}
-                  placeholder="CVV"
-                  className="w-full sm:w-[216px] h-full outline-none border-[1px] border-[#A1B0CC] placeholder:text-[#7C8DB0] text-[#7C8DB0] px-2 py-3 text-base rounded"
-                />
-                {error.cvv && <p className="text-sm text-neutral-400">{error.cvv}</p>}
-                </div>
-              </div>
             </form>
           </div>
           <div className="flex flex-col items-start justify-start w-full gap-5">
@@ -184,12 +127,13 @@ const Payment = () => {
               </button>
             </Link>
             <Link>
-              <button
+            <button
                 className="block py-2 px-4 border-[1px] border-[#7C8DB0] text-[#7C8DB0] bg-[#CBD4E6] rounded hover:bg-[#605DEC] hover:text-white hover:border-[#605DEC] transition-all duration-200"
                 onClick={submitInputs}
+                disabled={isLoading}
               >
-                Confirm and pay
-              </button>
+                {isLoading ? "Processing..." : "Confirm and pay"}
+            </button>
             </Link>
           </div>
         </div>
@@ -208,6 +152,16 @@ const Payment = () => {
         </div>
       </div>
     </>
+  );
+};
+
+const Payment = () => {
+  const stripePromise = loadStripe("pk_test_51PDCEC2LXv2e51yJki6Y0Ko5uYtufmdpEla7A8oYKzv3pzeEHoQSgUn53XUVM0OSf60aHDbT2n2o2PkEvcRrEdT500PbEi8tQY");
+
+  return (
+    <Elements stripe={stripePromise}>
+      <PaymentForm />
+    </Elements>
   );
 };
 

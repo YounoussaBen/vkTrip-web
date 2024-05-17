@@ -1,114 +1,134 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { FlightCard } from "../container";
-import { hawaiian } from "../assets/logo";
-import { creditCard } from "../assets/icons";
+import api from "../api";
+import { useNavigate } from "react-router-dom";
+import { format } from "date-fns"; // Import format function for date formatting
 
 const Confirm = () => {
-    const[close, setClose] = useState(true)
+    const [close, setClose] = useState(true);
+    const [passengerName, setPassengerName] = useState("");
+    const [confirmationNumber, setConfirmationNumber] = useState("");
+    const [flightSummary, setFlightSummary] = useState("");
+    const [flights, setFlights] = useState(null); // State for flights data
+    const [index, setIndex] = useState(null); // State for index
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [flightPrice, setFlightPrice] = useState(0);
+    const navigate = useNavigate();
 
-    const index = JSON.parse(localStorage.getItem("flights_selected_index"))
-    
-    const flights = JSON.parse(localStorage.getItem("flights"));
+    useEffect(() => {
+        // Fetch passenger name and other details
+        const fetchData = async () => {
+            try {
+                const token = localStorage.getItem("access");
+                const bookData = JSON.parse(localStorage.getItem("booking_data"));
+                const passengerId = bookData.passengers[0]; // Assuming only one passenger for simplicity
 
-  return (
-    <>
-    <div className="mb-28 flex flex-col items-start justify-between w-full h-full gap-10 px-8 mt-20 lg:flex-row ">
-       <div className="w-full lg:w-[756px] flex flex-col items-start gap-16">
-          { close && (
-            <div className="w-full lg:w-[704px] h-[64px] border-2 border-[#007B65] bg-[#EAFFFB] rounded  p-2 hidden md:flex items-center justify-center  ">
-            <p className="w-full h-full flex items-center justify-start text-[#007B65] text-xs sm:text-base">Your flight has been booked successfully! Your confirmation number is #381029404387</p>
-            <MdOutlineClose className="text-[#52527A] font-medium cursor-pointer" onClick={() => setClose(false)}/>
-          </div>
-          )}
+                // Fetch passenger name using passengerId
+                const response = await api.get(`/passenger/${passengerId}/`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
-          <div className="flex flex-col items-start justify-start w-full gap-2 ">
-            <h1 className="titleh1">Bon voyage, Sophia!</h1>
-            <p className="text-[#6E7491] text-base sm:text-lg font-semibold">Confirmation number: #381029404387</p>
-            <p className="text-[#7C8DB0] text-sm sm:text-base font-medium">Thank you for booking your travel with vkTRip! Below is a summary of your trip to Narita airport in Tokyo, Japan. We’ve sent a copy of your booking confirmation to your email address. You can also find this page again in <span className="text-[#605DEC]"> My trips.</span></p>
-          </div>
-          <div className="flex flex-col items-start justify-start w-full gap-4">
-             <h1 className="text-[#6E7491] text-xl sm:text-2xl font-bold">Flight summary</h1>
-             <div className="flex flex-col items-start w-full gap-2 ">
-             <p className="text-[#7C8DB0] text-base sm:text-lg font-semibold">Departing {flights.results[index].departure_datetimeŒ}</p>
-             <div
-              className="w-full cursor-pointer border-[1px] border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE]"
-            >
-              <FlightCard
-                img={hawaiian}
-                duration="16h 45m"
-                name="Hawaiian Airlines"
-                time="7:00AM - 4:15PM"
-                stop="1 stop"
-                hnl="2h 45m in HNL"
-                price="$624"
-                trip="round trip"
-              />
+                setPassengerName(response.data.FirstName + ' ' + response.data.LastName);
+
+                // Set confirmation number
+                setConfirmationNumber(bookData.id);
+
+                const totalPrice = bookData.total_price;
+               setTotalPrice(totalPrice);
+                // Set flight summary
+                const selectedIndex = JSON.parse(localStorage.getItem("flights_selected_index"));
+                const flightsData = JSON.parse(localStorage.getItem("flights")); // Retrieve flights data
+                const selectedFlight = flightsData.results[selectedIndex];
+                const departureDate = new Date(selectedFlight.departure_datetime).toDateString();
+                setFlightSummary(`Departing on ${departureDate} from ${selectedFlight.departure_location.airport_name} to ${selectedFlight.arrival_location.airport_name}`);
+
+                // Set flights data to state
+                setFlights(flightsData);
+                // Set index to state
+                setIndex(selectedIndex);
+
+                const flightPrice = selectedFlight.base_price;
+                  setFlightPrice(flightPrice);
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const handleMyTripsClick = () => {
+        navigate("/my-flights");
+    };
+
+    return (
+        <>
+            <div className="mb-28 flex flex-col items-start justify-between w-full h-full gap-10 px-8 mt-20 lg:flex-row ">
+                <div className="w-full lg:w-[756px] flex flex-col items-start gap-16">
+                    { close && (
+                        <div className="w-full lg:w-[704px] h-[64px] border-2 border-[#007B65] bg-[#EAFFFB] rounded  p-2 hidden md:flex items-center justify-center  ">
+                            <p className="w-full h-full flex items-center justify-start text-[#007B65] text-xs sm:text-base">Your flight has been booked successfully! Your confirmation number is #{confirmationNumber}</p>
+                            <MdOutlineClose className="text-[#52527A] font-medium cursor-pointer" onClick={() => setClose(false)} />
+                        </div>
+                    )}
+
+                    <div className="flex flex-col items-start justify-start w-full gap-2 ">
+                        <h1 className="titleh1">Bon voyage, {passengerName}!</h1>
+                        <p className="text-[#6E7491] text-base sm:text-lg font-semibold">Confirmation number: #{confirmationNumber}</p>
+                        <p className="text-[#7C8DB0] text-sm sm:text-base font-medium">Thank you for booking your travel with vkTRip! Below is a summary of your trip <span className="text-[#605DEC]" onClick={handleMyTripsClick}> My trips.</span></p>
+                    </div>
+                    <div className="flex flex-col items-start justify-start w-full gap-4">
+                        <h1 className="text-[#6E7491] text-xl sm:text-2xl font-bold">Flight summary</h1>
+                        <div className="flex flex-col items-start w-full gap-2 ">
+                            <p className="text-[#7C8DB0] text-base sm:text-lg font-semibold">{flightSummary}</p>
+                            {flights && index !== null && <FlightCard // Render FlightCard only if flights data and index are available
+                                 img={flights.results[index].airline.logo}
+                                 arrival_location={flights.results[index].arrival_location.airport_name}
+                                 departure_location={flights.results[index].departure_location.airport_name}
+                                 flight_class={flights.results[index].flight_class}
+                                 passenger_type={flights.results[index].passenger_type}
+                                 duration={flights.results[index].duration}
+                                 name={flights.results[index].airline.name}
+                                 date={format(
+                                    new Date(flights.results[index].departure_datetime),
+                                    "yyyy-MM-dd"
+                                 )}
+                                 stop={flights.results[index].stopovers.length > 0 ? "1 stop" : "Direct"}
+                                 hnl={flights.results[index].stopovers.length > 0 ? "2h 45m in HNL" : "No stopover"}
+                                 price={flights.results[index].base_price}
+                                 trip={flights?.flight_type}
+                              />}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="w-full sm:w-[400px] h-full flex flex-col items-start gap-28">
+                <div className="w-full sm:w-[400px] h-full flex flex-col items-start gap-28">
+                  <div className="flex flex-col items-start w-full gap-5">
+                     <h1 className="text-[#6E7491] text-xl sm:text-2xl font-bold">Price breakdown</h1>
+                     <div className="w-full h-full sm:w-[400px] flex flex-col items-start gap-3 ">
+                           <div className="flex items-center justify-between w-full text-[#6E7491] text-sm sm:text-base gap-3" >
+                              <p>Departing Flight</p>
+                              <p>${flightPrice}</p>
+                           </div>
+                           {/* Add more breakdowns as needed */}
+                           <hr className="w-full mt-5"/>
+                           <div className="flex items-center justify-between w-full text-[#36374A] text-sm sm:text-base gap-3" >
+                              <p>Amount paid</p>  
+                              <p>${totalPrice}</p>
+                           </div>
+                           <hr className="w-full "/>
+                     </div>
+                  </div>
+               </div>
+             </div>
             </div>
-            <p className="text-[#7C8DB0] text-sm sm:text-base font-normal">Seat 9F (economy, window), 1 checked bag</p>
-             </div>
-             {/* <div className="flex flex-col items-start w-full gap-2 mt-8"> */}
-             {/* <p className="text-[#7C8DB0] text-base sm:text-lg font-semibold">Arriving March 21st, 2023</p> */}
-             {/* <div
-              className="w-full cursor-pointer border-[1px] border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE]"
-            >
-              <FlightCard
-                img={hawaiian}
-                duration="16h 45m"
-                name="Hawaiian Airlines"
-                time="7:00AM - 4:15PM"
-                stop="1 stop"
-                hnl="2h 45m in HNL"
-                price="$624"
-                trip="round trip"
-              />
-            </div> */}
-            {/* <p className="text-[#7C8DB0] text-sm sm:text-base font-normal">Seat 4F (business, window), 1 checked bag</p> */}
-             {/* </div> */}
-          </div>
-
-       </div>
-
-       <div className="w-full sm:w-[400px] h-full flex flex-col items-start gap-28">
-                     <div className="flex flex-col items-start w-full gap-5">
-          <h1 className="text-[#6E7491] text-xl sm:text-2xl font-bold">Price breakdown</h1>
-          <div className="w-full h-full sm:w-[400px] flex flex-col items-start gap-3 ">
-             <div className="flex items-center justify-between w-full text-[#6E7491] text-sm sm:text-base gap-3" >
-                <p>Departing Flight</p>
-                <p>$251.50</p>
-             </div>
-             <div className="flex items-center justify-between w-full text-[#6E7491] text-sm sm:text-base gap-3" >
-                <p>Arriving Flight</p>
-                <p>$251.50</p>
-             </div>
-             <div className="flex items-center justify-between w-full text-[#6E7491] text-sm sm:text-base gap-3" >
-                <p>Baggage fees</p>
-                <p>$0</p>
-             </div>
-             <div className="flex items-center justify-between w-full text-[#6E7491] text-sm sm:text-base gap-3" >
-                <p>Seat upgrade (business)</p>
-                <p>$199</p>
-             </div>
-             <div className="flex items-center justify-between w-full text-[#6E7491] text-sm sm:text-base gap-3" >
-                <p>Subtotal</p>
-                <p>$702</p>
-             </div>
-             <div className="flex items-center justify-between w-full text-[#6E7491] text-sm sm:text-base gap-3" >
-                <p>Taxes (9.4%)</p>
-                <p>$66</p>
-             </div>
-             <hr className="w-full mt-5"/>
-             <div className="flex items-center justify-between w-full text-[#36374A] text-sm sm:text-base gap-3" >
-                <p>Amount paid</p>
-                <p>$768</p>
-             </div>
-             <hr className="w-full "/>
-          </div>
-          </div>
-       </div>
-    </div>
-    </>
-  )
+        </>
+    )
 }
 
-export default Confirm
+export default Confirm;
