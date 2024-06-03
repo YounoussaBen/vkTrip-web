@@ -1,30 +1,28 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { map } from "../assets/images";
-import { FlightCard, PriceDetails } from "../container";
-import { Link } from "react-router-dom";
+import { RoundTripFlightCard, FlightCard, PriceDetails } from "../container";
+import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../components/protectedRoute";
-import { useContext } from "react";
 import Signin from "../components/signin";
 import Signup from "../components/signup";
-import {AUTH} from "../constants";
+import { AUTH } from "../constants";
 
 const FlightChoose = () => {
   const [priceShown, setPriceShow] = useState(true);
   const navigate = useNavigate();
 
-  const flights = JSON.parse(localStorage.getItem("flights"));
+  let flights = JSON.parse(localStorage.getItem("flights"));
   const cflights = JSON.parse(localStorage.getItem("currentFlight"));
 
+  console.log(flights)
   const isAuthorized = useContext(AuthContext);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
   const handleOpenLoginOrPage = () => {
-    const authValue = localStorage.getItem(AUTH)
-    if (authValue === 'true') {
-      // history.push("/booking");
+    const authValue = localStorage.getItem(AUTH);
+    if (authValue === "true") {
       navigate("/booking");
     } else {
       setIsLoginOpen(true);
@@ -52,51 +50,70 @@ const FlightChoose = () => {
     setIsRegisterOpen(true);
   };
 
+  // Ensure flights is an array if the API returns a result count and results
+  if (flights && flights.results) {
+    flights = flights.results;
+  }
+
+  // Check if flights is an array
+  const isFlightsArray = Array.isArray(flights);
+
   return (
     <>
-      <div className="flex flex-col items-start justify-between lg:flex-row ">
+      <div className="flex flex-col items-start justify-between lg:flex-row">
         <div className="w-full lg:w-[872px] h-full flex flex-col gap-5">
           <div className="flex items-start justify-start">
-            <h1 className="text-[#6E7491]  text-lg leading-6 font-semibold">
+            <h1 className="text-[#6E7491] text-lg leading-6 font-semibold">
               Choose a <span className="text-[#605DEC]">departing </span>/{" "}
               <span className="text-[#605DEC]">returning </span>flight
             </h1>
           </div>
           <div className="flex flex-col items-start justify-start w-full rounded-xl">
-            <div className="w-full cursor-pointer border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE]">
-              {( flights?.count === 0 || flights == null) ? (
-                <div className="p-6 ">No match your search</div>
+            <div className="w-full cursor-pointer border-[#E9E8FC] hover:bg-[#F6F6FE] transition-all duration-300 focus:bg-[#F6F6FE] p-6">
+              {(!isFlightsArray || flights.length === 0) ? (
+                <div className="flex flex-col items-center justify-center text-center">
+                  <span className="text-2xl text-[#6E7491] mb-4">No matches found for your search</span>
+                  <p className="text-sm text-[#A0A4B8]">Try modifying your search criteria</p>
+                </div>
               ) : (
-                flights?.results.map((item, index) => (
-                  <div
-                  className=""
-                  onClick={() => {
-                    localStorage.setItem("flights_selected_index", index),
-                        // navigate("/booking");
-                    handleOpenLoginOrPage();
-                  }}
-                  >
-                    <FlightCard
+                flights.map((item, index) =>
+                  cflights.flight_type === "Round Trip" ? (
+                    <RoundTripFlightCard
                       key={index}
-                      img={item.airline.logo}
-                      arrival_location={item.arrival_location.airport_name}
-                      departure_location={item.departure_location.airport_name}
-                      flight_class={item.flight_class}
-                      passenger_type={item.passenger_type}
-                      duration="1h"
-                      name={item.airline.name}
-                      date={format(
-                        new Date(item.departure_datetime),
-                        "yyyy-MM-dd"
-                      )}
-                      stop={item.stopover}
-                      hnl="no stopover"
-                      price={item.base_price}
-                      trip={cflights?.flight_type}
+                      outboundFlight={item.outbound_flight}
+                      returnFlight={item.return_flight}
+                      handleClick={() => {
+                        localStorage.setItem("flights_selected_index", index);
+                        handleOpenLoginOrPage();
+                      }}
+                      tripType={cflights?.flight_type}
                     />
-                  </div>
+                  ) : (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        localStorage.setItem("flights_selected_index", index);
+                        handleOpenLoginOrPage();
+                      }}
+                    >
+                      <FlightCard
+                        img={item.airline.logo}
+                        arrival_location={item.arrival_location.airport_name}
+                        departure_location={item.departure_location.airport_name}
+                        flight_class={item.flight_class}
+                        passenger_type={item.passenger_type}
+                        duration="1h"
+                        name={item.airline.name}
+                        date={format(new Date(item.departure_datetime), "yyyy-MM-dd")}
+                        stop={item.stopover}
+                        hnl="no stopover"
+                        price={item.base_price}
+                        trip={cflights?.flight_type}
+                        stopovers={item.stopovers} 
+                      />
+                    </div>
+                  )
                 )
-              )
               )}
             </div>
           </div>
@@ -117,17 +134,11 @@ const FlightChoose = () => {
         )}
 
         {isRegisterOpen && (
-          <Signup
-            openAnotherModal={handleOpenLoginAgain}
-            onClose={handleClose}
-          />
+          <Signup openAnotherModal={handleOpenLoginAgain} onClose={handleClose} />
         )}
 
         {isLoginOpen && (
-          <Signin
-            openAnotherModal={handleOpenRegisterAgain}
-            onClose={handleClose}
-          />
+          <Signin openAnotherModal={handleOpenRegisterAgain} onClose={handleClose} />
         )}
       </div>
     </>
