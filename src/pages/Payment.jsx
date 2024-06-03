@@ -1,11 +1,13 @@
+import React, { useState } from "react";
 import { AiOutlineCreditCard } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { PriceDetails } from "../container";
-import { useState, useEffect } from "react";
 import api from "../api";
 import { loadStripe } from "@stripe/stripe-js";
 import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { toast } from "react-toastify";
+import LoadingIndicator from "./loadingIndicator";
+
 
 const PaymentForm = () => {
   const navigate = useNavigate();
@@ -14,7 +16,6 @@ const PaymentForm = () => {
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  
   const handlePayment = async () => {
     try {
       if (!stripe || !elements) {
@@ -29,13 +30,13 @@ const PaymentForm = () => {
 
       if (error) {
         console.error("Stripe error:", error);
-        // Handle error
+        toast.error("Payment failed. Please try again.");  // Show error message
       } else {
         // Send the paymentMethod.id to your backend
         const token = localStorage.getItem("access");
         const bookData = JSON.parse(localStorage.getItem("booking_data"));
         const response = await api.post("/payment/visa-card", {
-          card_token: 'tok_visa_cartesBancaires',
+          card_token: paymentMethod.id,
           booking_id: bookData.id,
           total_price: parseFloat(bookData.total_price),
         }, {
@@ -43,15 +44,15 @@ const PaymentForm = () => {
             Authorization: `Bearer ${token}`
           }
         });
-      // Log the response data
-      console.log("API response:", response.data);
+
+        // Log the response data
+        console.log("API response:", response.data);
         toast.success("Payment successful!");
-          // Handle response from backend
         navigate("/confirm");
       }
     } catch (error) {
       console.error("Error:", error);
-      // Handle error
+      toast.error("Payment processing failed. Please try again.");  // Show error message
     }
   };
 
@@ -64,7 +65,7 @@ const PaymentForm = () => {
     } else {
       toast.warning("Please fill the card details");
     }
-  };  
+  };
 
   const handleCardChange = (e) => {
     // Handle card change
@@ -72,6 +73,8 @@ const PaymentForm = () => {
 
   return (
     <>
+      {isLoading && <LoadingIndicator />} {/* Render LoadingIndicator when isLoading is true */}
+      
       <div className="flex flex-col items-start justify-between w-full h-full gap-10 px-8 mt-20 mb-28 lg:flex-row">
         <div className="w-full lg:w-[686px] flex flex-col items-start gap-12">
           <div className="flex flex-col items-start w-full gap-2">
@@ -120,20 +123,20 @@ const PaymentForm = () => {
               </p>
             </div>
           </div>
-          <div className="block lg:flex   items-center gap-5">
+          <div className="block lg:flex items-center gap-5">
             <Link to="/booking">
-              <button className=" hidden lg:flex py-2 px-4 border-[1px] border-[#605DEC] text-[#605DEC] rounded hover:bg-[#605DEC] hover:text-white transition-all duration-200">
+              <button className="hidden lg:flex py-2 px-4 border-[1px] border-[#605DEC] text-[#605DEC] rounded hover:bg-[#605DEC] hover:text-white transition-all duration-200">
                 Back to passenger info
               </button>
             </Link>
             <Link>
-            <button
+              <button
                 className="block py-2 px-4 border-[1px] border-[#7C8DB0] text-[#7C8DB0] bg-[#CBD4E6] rounded hover:bg-[#605DEC] hover:text-white hover:border-[#605DEC] transition-all duration-200"
                 onClick={submitInputs}
                 disabled={isLoading}
               >
                 {isLoading ? "Processing..." : "Confirm and pay"}
-            </button>
+              </button>
             </Link>
           </div>
         </div>
