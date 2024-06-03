@@ -75,28 +75,33 @@ const Booking = () => {
   };
 
   const bookMyFlight = async (e) => {
-    toast.success("Booking your flight...");
+    try {
+      toast.success("Booking your flight...");
+  
+      const passengerResponse = await api.post("/passenger/", passengerData);
 
-    const passengerResponse = await api.post("/passenger/", passengerData);
-    
-    const currentFlight = JSON.parse(localStorage.getItem("currentFlight"));
-    
-    const index = JSON.parse(localStorage.getItem("flights_selected_index"))
-    
-    const flights = JSON.parse(localStorage.getItem("flights"));
+      const currentFlight = JSON.parse(localStorage.getItem("currentFlight"));
 
-    const bookingData = {
-      trip_type: currentFlight.flight_type,
-      total_price: [flights.results[index].price],
-      checked_bags: 3,
-      passengers: [passengerResponse.data.id],
-      flights: [flights.results[index].id],
-    };
-    const response = await api.post("/booking/", bookingData);
-    localStorage.setItem("booking_data", JSON.stringify(response.data));
-    const bookData = JSON.parse(localStorage.getItem("booking_data"));
-    setIsBooking(false);  
-    navigate("/payment");
+      const index = JSON.parse(localStorage.getItem("flights_selected_index"))
+
+      const flights = JSON.parse(localStorage.getItem("flights"));
+      const selectedFlight = flights.results[index];
+      const price = selectedFlight.base_price;
+      const bookingData = {
+        trip_type: currentFlight.flight_type,
+        total_price: price,  // Here we use the price as a normal string
+        checked_bags: 1,
+        passengers: [passengerResponse.data.id],
+        flights: [selectedFlight.id],
+      };
+      const response = await api.post("/booking/", bookingData);
+      localStorage.setItem("booking_data", JSON.stringify(response.data));
+      const bookData = JSON.parse(localStorage.getItem("booking_data"));
+      setIsBooking(false);
+      navigate("/payment");
+    } catch (error) {
+      toast.error("Booking failed. Please try again.");
+    }
   };
 
   const isFormValid = () => {
