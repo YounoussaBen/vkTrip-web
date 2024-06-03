@@ -171,19 +171,8 @@ const Signup = ({signup, setSignup, openAnotherModal, onClose}) => {
       </div>
       <div className="flex items-center justify-center gap-2">
         <div className="w-full text-[#A1B0CC] border-t-[1px] border-t-[#A1B0CC] h-1 " />
-        <p className="text-[#7C8DB0] text-[18px] leading-6">or</p>
+        <p className="text-[#7C8DB0] text-[18px] leading-6"></p>
         <div className="w-full text-[#A1B0CC] border-t-[1px] border-t-[#A1B0CC] h-1" />
-      </div>
-      <div className="flex items-center justify-center w-full">
-        <button
-          className="w-full flex gap-2 items-center justify-center border-[1px] border-[#605DEC] rounded p-3"
-          onClick={() => setSignup(!signup)}
-        >
-          <FcGoogle className="w-[18px] h-[18px]" />
-          <p className="text-[#605CDE] text-[16px] leading-6">
-            Continue with Google
-          </p>
-        </button>
       </div>
     </div>
   );
